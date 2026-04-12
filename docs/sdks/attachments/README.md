@@ -5,7 +5,6 @@
 ### Available Operations
 
 * [initialize](#initialize) - Initialize upload
-* [delete](#delete) - Delete attachments
 * [finalize](#finalize) - Finalize upload
 
 ## initialize
@@ -43,35 +42,6 @@ response = sdk.Attachments.initialize(req);
 | Error 404 | 404 | application/json |
 | Error 500 | 500 | application/json |
 | Error 502 | 502 | application/json |
-| Error 4XX | 4XX | application/json |
-| Error 5XX | 5XX | application/json |
-
-## delete
-
-Permanently delete attachments by their IDs and unlink them from any associated runs or units. Removes files from storage and clears all references.
-### Example Usage
-
-```matlab
-sdk = tofupilot.TofuPilot('your-api-key');
-
-response = sdk.Attachments.delete('ids', {'value-1', 'value-2'});
-```
-
-### Parameters
-
-| Parameter | Type | Required | Description | Example |
-| --------- | ---- | -------- | ----------- | ------- |
-| `ids` | `cell array of string` | :heavy_check_mark: | Upload IDs to delete | {'value-1', 'value-2'} |
-
-
-### Errors
-
-| Error Type | Status Code | Content Type |
-| ---------- | ----------- | ------------ |
-| Error 400 | 400 | application/json |
-| Error 401 | 401 | application/json |
-| Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 5XX | 5XX | application/json |
 

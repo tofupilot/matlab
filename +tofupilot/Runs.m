@@ -7,8 +7,13 @@ classdef Runs < handle
     %     delete - Delete runs
     %     get - Get run
     %     update - Update run
+    %     createAttachment - Attach file to run
     %
     %   See also tofupilot.TofuPilot
+
+    properties (SetAccess = private)
+        Attachments  % tofupilot.RunAttachments
+    end
 
     properties (SetAccess = {?tofupilot.TofuPilot})
     end
@@ -24,6 +29,7 @@ classdef Runs < handle
                 client
             end
             obj.Client = client;
+            obj.Attachments = tofupilot.RunAttachments(obj);
         end
 
         function response = list(obj, opts)
@@ -177,6 +183,18 @@ classdef Runs < handle
             end
             path = sprintf('/v2/runs/%s', id);
             response = obj.Client.patch(path, request);
+        end
+
+        function response = createAttachment(obj, id, request)
+            %CREATEATTACHMENT Attach file to run
+            %   Create an attachment linked to a run and get a temporary pre-signed URL. Upload the file to the URL with a PUT request to complete the attachment.
+            arguments
+                obj
+                id (1,1) string
+                request struct = struct()
+            end
+            path = sprintf('/v2/runs/%s/attachments', id);
+            response = obj.Client.post(path, request);
         end
     end
 end

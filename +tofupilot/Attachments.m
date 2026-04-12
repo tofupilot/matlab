@@ -3,7 +3,6 @@ classdef Attachments < handle
     %
     %   Methods:
     %     initialize - Initialize upload
-    %     delete - Delete attachments
     %     finalize - Finalize upload
     %
     %   See also tofupilot.TofuPilot
@@ -32,20 +31,6 @@ classdef Attachments < handle
                 request struct = struct()
             end
             response = obj.Client.post('/v2/attachments', request);
-        end
-
-        function response = delete(obj, opts)
-            %DELETE Delete attachments
-            %   Permanently delete attachments by their IDs and unlink them from any associated runs or units. Removes files from storage and clears all references.
-            arguments
-                obj
-                opts.ids  = []
-            end
-            queryParams = struct();
-            if ~isempty(opts.ids)
-                queryParams.ids = opts.ids;
-            end
-            response = obj.Client.deleteWithQuery('/v2/attachments', queryParams);
         end
 
         function response = finalize(obj, id)

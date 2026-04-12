@@ -871,45 +871,49 @@ end
 function results = test_attachments(sdk)
     results = {};
 
-    % initialize
-    try
-        resp = sdk.Attachments.initialize(struct('name', 'test-upload.txt'));
-        assert(isfield(resp, 'id') && ~isempty(resp.id), 'Missing id');
-        assert(isfield(resp, 'upload_url') && ~isempty(resp.upload_url), 'Missing upload_url');
-        results{end+1} = pass('initialize');
-    catch ex
-        results{end+1} = fail('initialize', ex.message);
-    end
+    % setup: create a run to attach to
+    procResp = sdk.Procedures.create(struct('name', char("MATLAB-AttachProc-" + string(randi(99999)))));
+    procId = string(procResp.id);
+    now_str = char(datetime('now', 'TimeZone', 'UTC', 'Format', 'yyyy-MM-dd''T''HH:mm:ss''Z'''));
+    sn = "MATLAB-ATTACH-" + string(randi(99999));
+    runResp = sdk.Runs.create(struct( ...
+        'procedure_id', char(procId), ...
+        'serial_number', char(sn), ...
+        'part_number', 'ATTACH-PART', ...
+        'outcome', 'PASS', ...
+        'started_at', now_str, ...
+        'ended_at', now_str));
+    runId = string(runResp.id);
 
-    % upload helper
-    tmpFile = fullfile(tempdir, 'tofupilot_test_upload.txt');
+    % attach to run helper
+    tmpFile = fullfile(tempdir, 'tofupilot_test_attach.txt');
     fid = fopen(tmpFile, 'w');
-    fprintf(fid, 'MATLAB SDK test content');
+    fprintf(fid, 'MATLAB SDK attach test');
     fclose(fid);
     try
-        attachId = tofupilot.AttachmentHelpers.upload(sdk.Attachments, tmpFile);
+        attachId = sdk.Runs.Attachments.upload(runId, tmpFile);
         assert(strlength(attachId) == 36, 'Expected UUID');
-        results{end+1} = pass('upload_helper');
+        results{end+1} = pass('attach_to_run');
     catch ex
-        results{end+1} = fail('upload_helper', ex.message);
+        results{end+1} = fail('attach_to_run', ex.message);
     end
     delete(tmpFile);
 
-    % upload nonexistent file
+    % attach nonexistent file
     try
-        tofupilot.AttachmentHelpers.upload(sdk.Attachments, '/nonexistent/file.txt');
-        results{end+1} = fail('upload_nonexistent', 'Expected error');
+        sdk.Runs.Attachments.upload(runId, '/nonexistent/file.txt');
+        results{end+1} = fail('attach_nonexistent', 'Expected error');
     catch ex
         if contains(ex.message, 'File not found') || contains(ex.identifier, 'FileNotFound')
-            results{end+1} = pass('upload_nonexistent_error');
+            results{end+1} = pass('attach_nonexistent_error');
         else
-            results{end+1} = fail('upload_nonexistent_error', ex.message);
+            results{end+1} = fail('attach_nonexistent_error', ex.message);
         end
     end
 
     % download empty URL
     try
-        tofupilot.AttachmentHelpers.download('', '/tmp/test.txt');
+        sdk.Runs.Attachments.download('', '/tmp/test.txt');
         results{end+1} = fail('download_empty_url', 'Expected error');
     catch ex
         if contains(ex.message, 'empty') || contains(ex.identifier, 'InvalidUrl')
@@ -918,6 +922,40 @@ function results = test_attachments(sdk)
             results{end+1} = fail('download_empty_url_error', ex.message);
         end
     end
+
+    % attach to unit then delete
+    unitSn = "MATLAB-DELATT-" + string(randi(99999));
+    unitPart = "DELATT-PART-" + string(randi(99999));
+    unitRev = "DELATT-REV-" + string(randi(99999));
+    sdk.Parts.create(struct('number', char(unitPart), 'name', char("Part " + unitPart)));
+    sdk.Revisions.create(char(unitPart), struct('number', char(unitRev)));
+    sdk.Units.create(struct('serial_number', char(unitSn), 'part_number', char(unitPart), 'revision_number', char(unitRev)));
+    tmpFile2 = fullfile(tempdir, 'tofupilot_test_delatt.txt');
+    fid = fopen(tmpFile2, 'w'); fprintf(fid, 'file to delete'); fclose(fid);
+    try
+        attId = sdk.Units.Attachments.upload(char(unitSn), tmpFile2);
+        resp = sdk.Units.Attachments.delete(char(unitSn), {{char(attId)}});
+        assert(any(strcmp(resp.ids, char(attId))), 'Deleted ID not in response');
+        fetched = sdk.Units.get(char(unitSn));
+        found = false;
+        if isfield(fetched, 'attachments') && ~isempty(fetched.attachments)
+            for i = 1:numel(fetched.attachments)
+                if strcmp(fetched.attachments{i}.id, char(attId))
+                    found = true;
+                end
+            end
+        end
+        assert(~found, 'Attachment should be deleted');
+        results{end+1} = pass('delete_unit_attachment');
+    catch ex
+        results{end+1} = fail('delete_unit_attachment', ex.message);
+    end
+    delete(tmpFile2);
+
+    % cleanup
+    try sdk.Runs.delete('ids', {{char(runId)}}); catch; end
+    try sdk.Units.delete('serialNumbers', {{char(sn)}}); catch; end
+    try sdk.Units.delete('serialNumbers', {{char(unitSn)}}); catch; end
 end
 
 %% ---- Stations ----

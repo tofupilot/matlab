@@ -31,8 +31,8 @@ req.procedure_id = '550e8400-e29b-41d4-a716-446655440000';
 req.serial_number = 'SN-001234';
 req.part_number = 'PCB-V1.2';
 req.outcome = 'PASS';
-req.started_at = '2026-04-07T10:00:00Z';
-req.ended_at = '2026-04-07T10:05:00Z';
+req.started_at = '2026-04-12T10:00:00Z';
+req.ended_at = '2026-04-12T10:05:00Z';
 
 run = sdk.Runs.create(req);
 fprintf('Created run: %s\n', run.id);
@@ -44,29 +44,30 @@ fprintf('Created run: %s\n', run.id);
 | --- | --- | --- |
 | **Procedures** | list, create, get, delete, update | [docs/sdks/procedures](https://github.com/tofupilot/matlab/blob/main/docs/sdks/procedures/README.md) |
 | **Runs** | list, create, delete, get, update | [docs/sdks/runs](https://github.com/tofupilot/matlab/blob/main/docs/sdks/runs/README.md) |
-| **Attachments** | initialize, delete, finalize | [docs/sdks/attachments](https://github.com/tofupilot/matlab/blob/main/docs/sdks/attachments/README.md) |
+| **Runs.Attachments** | upload, download | - |
 | **Units** | list, create, delete, get, update, addChild, removeChild | [docs/sdks/units](https://github.com/tofupilot/matlab/blob/main/docs/sdks/units/README.md) |
+| **Units.Attachments** | upload, download, delete | - |
 | **Parts** | list, create, get, delete, update | [docs/sdks/parts](https://github.com/tofupilot/matlab/blob/main/docs/sdks/parts/README.md) |
 | **Batches** | get, delete, update, list, create | [docs/sdks/batches](https://github.com/tofupilot/matlab/blob/main/docs/sdks/batches/README.md) |
 | **Stations** | list, create, getCurrent, get, remove, update | [docs/sdks/stations](https://github.com/tofupilot/matlab/blob/main/docs/sdks/stations/README.md) |
 | **User** | list | [docs/sdks/user](https://github.com/tofupilot/matlab/blob/main/docs/sdks/user/README.md) |
 | **Versions** | get, delete, create | [docs/sdks/versions](https://github.com/tofupilot/matlab/blob/main/docs/sdks/versions/README.md) |
 | **Revisions** | get, delete, update, create | [docs/sdks/revisions](https://github.com/tofupilot/matlab/blob/main/docs/sdks/revisions/README.md) |
-| **AttachmentHelpers** | upload, download | [docs/sdks/attachments](https://github.com/tofupilot/matlab/blob/main/docs/sdks/attachments/README.md) |
 
-## File Upload
-
-The SDK provides helpers that handle the three-step upload flow (initialize → PUT → finalize) in a single call:
+## File Attachments
 
 ```matlab
-% Upload from disk
-attachId = tofupilot.AttachmentHelpers.upload(sdk.Attachments, 'report.pdf');
+% Upload a file to a run
+id = sdk.Runs.Attachments.upload(run.id, 'report.pdf');
 
-% Link to a run
-sdk.Runs.update(run.id, struct('attachments', {{attachId}}));
+% Upload a file to a unit
+id = sdk.Units.Attachments.upload('SN-0001', 'calibration.pdf');
 
-% Download a file
-tofupilot.AttachmentHelpers.download(downloadUrl, 'local-report.pdf');
+% Download an attachment
+sdk.Runs.Attachments.download(downloadUrl, 'local-report.pdf');
+
+% Delete a unit attachment
+sdk.Units.Attachments.delete('SN-0001', {id});
 ```
 
 ## Phases & Measurements

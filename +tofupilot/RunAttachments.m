@@ -1,24 +1,28 @@
-classdef AttachmentHelpers
-    %ATTACHMENTHELPERS Convenience methods for attaching files and downloading.
+classdef RunAttachments < handle
+    %RUNATTACHMENTS Sub-resource for run attachments.
     %
-    %   Methods (Static):
-    %     attachToRun  - Attach a file to a run.
-    %     attachToUnit - Attach a file to a unit.
-    %     download     - Download an attachment to a local file.
+    %   Methods:
+    %     upload   - Upload a file and attach it to a run. Returns the attachment ID.
+    %     download - Download an attachment to a local file.
     %
     %   Example:
     %     sdk = tofupilot.TofuPilot('your-api-key');
-    %     tofupilot.AttachmentHelpers.attachToRun(sdk.Runs, runId, 'report.pdf');
-    %     tofupilot.AttachmentHelpers.attachToUnit(sdk.Units, 'SN-0001', 'cal.pdf');
-    %
-    %   See also tofupilot.Runs, tofupilot.Units, tofupilot.TofuPilot
+    %     id = sdk.Runs.Attachments.upload(runId, 'report.pdf');
+    %     sdk.Runs.Attachments.download(downloadUrl, 'local-report.pdf');
 
-    methods (Static)
-        function attachmentId = attachToRun(runs, runId, filePath)
-            %ATTACHTORUN Attach a file to a run. Returns the attachment ID.
-            %   id = tofupilot.AttachmentHelpers.attachToRun(sdk.Runs, runId, filePath)
+    properties (Access = private)
+        Runs  % tofupilot.Runs
+    end
+
+    methods
+        function obj = RunAttachments(runs)
+            obj.Runs = runs;
+        end
+
+        function attachmentId = upload(obj, runId, filePath)
+            %CREATE Attach a file to a run. Returns the attachment ID.
             arguments
-                runs
+                obj
                 runId (1,1) string
                 filePath (1,1) string
             end
@@ -30,35 +34,15 @@ classdef AttachmentHelpers
             [~, name, ext] = fileparts(filePath);
             fileName = name + ext;
 
-            result = runs.createAttachment(char(runId), struct('name', char(fileName)));
-            tofupilot.AttachmentHelpers.putFile(filePath, string(result.upload_url), ext);
+            result = obj.Runs.createAttachment(char(runId), struct('name', char(fileName)));
+            tofupilot.RunAttachments.putFile(filePath, string(result.upload_url), ext);
             attachmentId = string(result.id);
         end
 
-        function attachmentId = attachToUnit(units, serialNumber, filePath)
-            %ATTACHTOUNIT Attach a file to a unit. Returns the attachment ID.
-            %   id = tofupilot.AttachmentHelpers.attachToUnit(sdk.Units, serialNumber, filePath)
-            arguments
-                units
-                serialNumber (1,1) string
-                filePath (1,1) string
-            end
-
-            if ~isfile(filePath)
-                error('tofupilot:FileNotFound', 'File not found: %s', filePath);
-            end
-
-            [~, name, ext] = fileparts(filePath);
-            fileName = name + ext;
-
-            result = units.createAttachment(char(serialNumber), struct('name', char(fileName)));
-            tofupilot.AttachmentHelpers.putFile(filePath, string(result.upload_url), ext);
-            attachmentId = string(result.id);
-        end
-
-        function outputPath = download(downloadUrl, destinationPath)
+        function outputPath = download(~, downloadUrl, destinationPath)
             %DOWNLOAD Download an attachment to a local file.
             arguments
+                ~
                 downloadUrl (1,1) string
                 destinationPath (1,1) string
             end
@@ -74,9 +58,7 @@ classdef AttachmentHelpers
 
     methods (Static, Access = private)
         function putFile(filePath, uploadUrl, ext)
-            %PUTFILE Upload file bytes to a pre-signed URL via HTTP PUT.
-            contentType = tofupilot.AttachmentHelpers.getContentType(ext);
-
+            contentType = tofupilot.RunAttachments.getContentType(ext);
             javaUrl = java.net.URL(char(uploadUrl));
             conn = javaUrl.openConnection();
             conn.setRequestMethod('PUT');

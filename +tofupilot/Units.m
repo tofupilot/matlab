@@ -9,8 +9,14 @@ classdef Units < handle
     %     update - Update unit
     %     addChild - Add sub-unit
     %     removeChild - Remove sub-unit
+    %     createAttachment - Attach file to unit
+    %     deleteAttachment - Delete unit attachments
     %
     %   See also tofupilot.TofuPilot
+
+    properties (SetAccess = private)
+        Attachments  % tofupilot.UnitAttachments
+    end
 
     properties (SetAccess = {?tofupilot.TofuPilot})
     end
@@ -26,6 +32,7 @@ classdef Units < handle
                 client
             end
             obj.Client = client;
+            obj.Attachments = tofupilot.UnitAttachments(obj);
         end
 
         function response = list(obj, opts)
@@ -197,6 +204,34 @@ classdef Units < handle
             queryParams = struct();
             if ~isempty(opts.childSerialNumber)
                 queryParams.child_serial_number = opts.childSerialNumber;
+            end
+            response = obj.Client.deleteWithQuery(path, queryParams);
+        end
+
+        function response = createAttachment(obj, serial_number, request)
+            %CREATEATTACHMENT Attach file to unit
+            %   Create an attachment linked to a unit and get a temporary pre-signed URL. Upload the file to the URL with a PUT request to complete the attachment.
+            arguments
+                obj
+                serial_number (1,1) string
+                request struct = struct()
+            end
+            path = sprintf('/v2/units/%s/attachments', serial_number);
+            response = obj.Client.post(path, request);
+        end
+
+        function response = deleteAttachment(obj, serial_number, opts)
+            %DELETEATTACHMENT Delete unit attachments
+            %   Delete attachments from a unit by their IDs. Removes the files from storage and unlinks them from the unit.
+            arguments
+                obj
+                serial_number (1,1) string
+                opts.ids  = []
+            end
+            path = sprintf('/v2/units/%s/attachments', serial_number);
+            queryParams = struct();
+            if ~isempty(opts.ids)
+                queryParams.ids = opts.ids;
             end
             response = obj.Client.deleteWithQuery(path, queryParams);
         end

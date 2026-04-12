@@ -11,6 +11,8 @@
 * [update](#update) - Update unit
 * [addChild](#addchild) - Add sub-unit
 * [removeChild](#removechild) - Remove sub-unit
+* [createAttachment](#createattachment) - Attach file to unit
+* [deleteAttachment](#deleteattachment) - Delete unit attachments
 
 ## list
 
@@ -263,6 +265,71 @@ response = sdk.Units.removeChild('SN-001234', 'childSerialNumber', 'SUB-001');
 | Error Type | Status Code | Content Type |
 | ---------- | ----------- | ------------ |
 | Error 400 | 400 | application/json |
+| Error 401 | 401 | application/json |
+| Error 404 | 404 | application/json |
+| Error 500 | 500 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 5XX | 5XX | application/json |
+
+## createAttachment
+
+Create an attachment linked to a unit and get a temporary pre-signed URL. Upload the file to the URL with a PUT request to complete the attachment.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+req.name = 'Example Name';
+
+response = sdk.Units.createAttachment('SN-001234', req);
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `serial_number` | `string` | :heavy_check_mark: | Serial number of the unit to attach the file to. Matched case-insensitively. | SN-001234 |
+| `request` | `struct` | :heavy_check_mark: | Request body struct | — |
+
+#### Request Body Fields
+
+| Field | Type | Required | Description | Example |
+| ----- | ---- | -------- | ----------- | ------- |
+| `name` | `string` | :heavy_check_mark: | File name including extension (e.g. "calibration.pdf"). Used to determine content type and display name. | Example Name |
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
+| Error 401 | 401 | application/json |
+| Error 404 | 404 | application/json |
+| Error 500 | 500 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 5XX | 5XX | application/json |
+
+## deleteAttachment
+
+Delete attachments from a unit by their IDs. Removes the files from storage and unlinks them from the unit.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+response = sdk.Units.deleteAttachment('SN-001234', 'ids', {'value-1', 'value-2'});
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `serial_number` | `string` | :heavy_check_mark: | Serial number of the unit. Matched case-insensitively. | SN-001234 |
+| `ids` | `cell array of string` | :heavy_check_mark: | Attachment IDs to delete | {'value-1', 'value-2'} |
+
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
 | Error 500 | 500 | application/json |

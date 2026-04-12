@@ -9,6 +9,7 @@
 * [delete](#delete) - Delete runs
 * [get](#get) - Get run
 * [update](#update) - Update run
+* [createAttachment](#createattachment) - Attach file to run
 
 ## list
 
@@ -207,6 +208,42 @@ response = sdk.Runs.update('550e8400-e29b-41d4-a716-446655440000', req);
 | Field | Type | Required | Description | Example |
 | ----- | ---- | -------- | ----------- | ------- |
 | `attachments` | `cell array of string` | :heavy_minus_sign: | Array of upload IDs to attach to the run. | {'value-1', 'value-2'} |
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
+| Error 401 | 401 | application/json |
+| Error 404 | 404 | application/json |
+| Error 500 | 500 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 5XX | 5XX | application/json |
+
+## createAttachment
+
+Create an attachment linked to a run and get a temporary pre-signed URL. Upload the file to the URL with a PUT request to complete the attachment.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+req.name = 'Example Name';
+
+response = sdk.Runs.createAttachment('550e8400-e29b-41d4-a716-446655440000', req);
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `id` | `string` | :heavy_check_mark: | Unique identifier of the run to attach the file to. | 550e8400-e29b-41d4-a716-446655440000 |
+| `request` | `struct` | :heavy_check_mark: | Request body struct | — |
+
+#### Request Body Fields
+
+| Field | Type | Required | Description | Example |
+| ----- | ---- | -------- | ----------- | ------- |
+| `name` | `string` | :heavy_check_mark: | File name including extension (e.g. "report.pdf"). Used to determine content type and display name. | Example Name |
 
 ### Errors
 
