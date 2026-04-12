@@ -11,10 +11,6 @@ classdef Runs < handle
     %
     %   See also tofupilot.TofuPilot
 
-    properties (SetAccess = private)
-        Attachments  % tofupilot.RunAttachments
-    end
-
     properties (SetAccess = {?tofupilot.TofuPilot})
     end
 
@@ -29,7 +25,6 @@ classdef Runs < handle
                 client
             end
             obj.Client = client;
-            obj.Attachments = tofupilot.RunAttachments(obj);
         end
 
         function response = list(obj, opts)

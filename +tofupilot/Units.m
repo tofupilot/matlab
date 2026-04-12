@@ -14,10 +14,6 @@ classdef Units < handle
     %
     %   See also tofupilot.TofuPilot
 
-    properties (SetAccess = private)
-        Attachments  % tofupilot.UnitAttachments
-    end
-
     properties (SetAccess = {?tofupilot.TofuPilot})
     end
 
@@ -32,7 +28,6 @@ classdef Units < handle
                 client
             end
             obj.Client = client;
-            obj.Attachments = tofupilot.UnitAttachments(obj);
         end
 
         function response = list(obj, opts)

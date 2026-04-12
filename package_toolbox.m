@@ -17,7 +17,7 @@ function package_toolbox()
     opts = matlab.addons.toolbox.ToolboxOptions(toolboxFolder, uuid);
 
     opts.ToolboxName = 'TofuPilot';
-    opts.ToolboxVersion = '2.0.1';
+    opts.ToolboxVersion = '2.0.2';
     opts.Summary = 'TofuPilot API v2 client for MATLAB';
     opts.Description = 'MATLAB SDK for the TofuPilot REST API. Manage test runs, units, procedures, parts, batches, stations, and attachments.';
     opts.AuthorName = 'TofuPilot';
