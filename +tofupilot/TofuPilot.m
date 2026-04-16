@@ -72,7 +72,14 @@ classdef TofuPilot < handle
                 'beforeRequest', {opts.BeforeRequest}, ...
                 'afterSuccess', {opts.AfterSuccess}, ...
                 'afterError', {opts.AfterError});
-            obj.Client = tofupilot.BaseClient(apiKey, opts.BaseUrl, opts.Timeout, opts.MaxRetries, hooks);
+            baseUrl = opts.BaseUrl;
+            if endsWith(baseUrl, '/')
+                baseUrl = extractBefore(baseUrl, strlength(baseUrl));
+            end
+            if ~endsWith(baseUrl, '/api')
+                baseUrl = baseUrl + "/api";
+            end
+            obj.Client = tofupilot.BaseClient(apiKey, baseUrl, opts.Timeout, opts.MaxRetries, hooks);
             obj.Procedures = tofupilot.Procedures(obj.Client);
             obj.Runs = tofupilot.Runs(obj.Client);
             obj.Attachments = tofupilot.Attachments(obj.Client);
