@@ -72,6 +72,7 @@ sdk = tofupilot.TofuPilot('your-api-key');
 
 req.outcome = 'PASS';
 req.procedure_id = '550e8400-e29b-41d4-a716-446655440000';
+req.deployment_id = 'example-value';
 req.procedure_version = 'v1.2.3';
 req.operated_by = 'john.doe@example.com';
 req.started_at = '2026-01-15T10:30:00Z';
@@ -100,6 +101,7 @@ response = sdk.Runs.create(req);
 | ----- | ---- | -------- | ----------- | ------- |
 | `outcome` | `string` | :heavy_check_mark: | Overall test result. Use PASS when test succeeds, FAIL when test fails but script execution completed successfully, ERROR when script execution fails, TIMEOUT when test exceeds time limit, ABORTED for manual script interruption. | PASS |
 | `procedure_id` | `string` | :heavy_check_mark: | Procedure ID. Create the procedure in the app first, then find the auto-generated ID on the procedure page. | 550e8400-e29b-41d4-a716-446655440000 |
+| `deployment_id` | `string (optional)` | :heavy_minus_sign: | N/A | example-value |
 | `procedure_version` | `string (optional)` | :heavy_minus_sign: | N/A | v1.2.3 |
 | `operated_by` | `string (optional)` | :heavy_minus_sign: | Email address of the operator who executed the test run. The operator must exist as a user in the system. The run will be linked to this user to track who performed the test. | john.doe@example.com |
 | `started_at` | `string` | :heavy_check_mark: | ISO 8601 timestamp when the test run began execution. This timestamp will be used to track when the test execution started and for historical analysis of test runs. A separate created_at timestamp is stored internally server side to track upload date. | 2026-01-15T10:30:00Z |

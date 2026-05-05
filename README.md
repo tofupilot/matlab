@@ -31,8 +31,8 @@ req.procedure_id = '550e8400-e29b-41d4-a716-446655440000';
 req.serial_number = 'SN-001234';
 req.part_number = 'PCB-V1.2';
 req.outcome = 'PASS';
-req.started_at = '2026-04-12T10:00:00Z';
-req.ended_at = '2026-04-12T10:05:00Z';
+req.started_at = '2026-05-05T10:00:00Z';
+req.ended_at = '2026-05-05T10:05:00Z';
 
 run = sdk.Runs.create(req);
 fprintf('Created run: %s\n', run.id);
