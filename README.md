@@ -43,7 +43,7 @@ fprintf('Created run: %s\n', run.id);
 | Resource | Methods | Docs |
 | --- | --- | --- |
 | **Procedures** | list, create, get, delete, update | [docs/sdks/procedures](https://github.com/tofupilot/matlab/blob/main/docs/sdks/procedures/README.md) |
-| **Runs** | list, create, delete, get, update, createAttachment | [docs/sdks/runs](https://github.com/tofupilot/matlab/blob/main/docs/sdks/runs/README.md) |
+| **Runs** | list, create, delete, get, update, createAttachment, updateMetadata | [docs/sdks/runs](https://github.com/tofupilot/matlab/blob/main/docs/sdks/runs/README.md) |
 | **Attachments** | initialize, finalize | [docs/sdks/attachments](https://github.com/tofupilot/matlab/blob/main/docs/sdks/attachments/README.md) |
 | **Units** | list, create, delete, get, update, addChild, removeChild, createAttachment, deleteAttachment | [docs/sdks/units](https://github.com/tofupilot/matlab/blob/main/docs/sdks/units/README.md) |
 | **Parts** | list, create, get, delete, update | [docs/sdks/parts](https://github.com/tofupilot/matlab/blob/main/docs/sdks/parts/README.md) |

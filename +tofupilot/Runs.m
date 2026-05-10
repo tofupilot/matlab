@@ -8,6 +8,7 @@ classdef Runs < handle
     %     get - Get run
     %     update - Update run
     %     createAttachment - Attach file to run
+    %     updateMetadata - Update run metadata
     %
     %   See also tofupilot.TofuPilot
 
@@ -57,6 +58,8 @@ classdef Runs < handle
                 opts.cursor  = []
                 opts.sortBy (1,1) string = "started_at"
                 opts.sortOrder (1,1) string = "desc"
+                opts.metadata (1,1) string = ""
+                opts.includeMetadata (1,1) logical = false
             end
             queryParams = struct();
             if ~isempty(opts.searchQuery)
@@ -134,6 +137,12 @@ classdef Runs < handle
             if ~isempty(opts.sortOrder)
                 queryParams.sort_order = opts.sortOrder;
             end
+            if ~isempty(opts.metadata)
+                queryParams.metadata = opts.metadata;
+            end
+            if ~isempty(opts.includeMetadata)
+                queryParams.include_metadata = opts.includeMetadata;
+            end
             response = obj.Client.get('/v2/runs', queryParams);
         end
 
@@ -194,6 +203,18 @@ classdef Runs < handle
             end
             path = sprintf('/v2/runs/%s/attachments', id);
             response = obj.Client.post(path, request);
+        end
+
+        function response = updateMetadata(obj, id, request)
+            %UPDATEMETADATA Update run metadata
+            %   Upsert custom metadata on a run. Plain object of key/value pairs. PATCH semantics by default (omitted keys preserved). Pass `null` as a value to delete a key. Pass `metadata_replace: true` to drop all keys not present.
+            arguments
+                obj
+                id (1,1) string
+                request struct = struct()
+            end
+            path = sprintf('/v2/runs/%s/metadata', id);
+            response = obj.Client.patch(path, request);
         end
     end
 end

@@ -10,6 +10,7 @@
 * [get](#get) - Get run
 * [update](#update) - Update run
 * [createAttachment](#createattachment) - Attach file to run
+* [updateMetadata](#updatemetadata) - Update run metadata
 
 ## list
 
@@ -51,6 +52,8 @@ response = sdk.Runs.list('searchQuery', 'search-term', 'ids', {'value-1', 'value
 | `cursor` | `double (optional)` | :heavy_minus_sign: | N/A | 0 |
 | `sortBy` | `string` | :heavy_minus_sign: | Field to sort results by. | created_at |
 | `sortOrder` | `string` | :heavy_minus_sign: | Sort order direction. | desc |
+| `metadata` | `any` | :heavy_minus_sign: | Filter runs by custom metadata. Supports up to 5 keys per request. Per-key operators: string `{in: [...]}`/`{contains: "..."}`, number `{gte, lte, gt, lt, eq}`, bool `{eq: true\|false}`. | struct() |
+| `includeMetadata` | `logical (optional)` | :heavy_minus_sign: | When true, includes the run metadata array in the response. Defaults to false to keep payloads small. | false |
 
 
 ### Errors
@@ -86,6 +89,8 @@ req.sub_units = {'value-1', 'value-2'};
 req.docstring = 'Test run description';
 req.phases = {};
 req.logs = {};
+req.metadata = struct();
+req.unit_metadata = struct();
 
 response = sdk.Runs.create(req);
 ```
@@ -115,6 +120,8 @@ response = sdk.Runs.create(req);
 | `docstring` | `string (optional)` | :heavy_minus_sign: | Additional notes or documentation about this test run. | Test run description |
 | `phases` | `cell array of string` | :heavy_minus_sign: | Array of test phases with measurements and results. Each phase represents a distinct stage of the test execution with timing information, outcome status, and optional measurements. If no phases are specified, the run will be created without phase-level organization of test data. | {} |
 | `logs` | `cell array of string` | :heavy_minus_sign: | Array of log messages generated during the test execution. Each log entry captures events, errors, and diagnostic information with severity levels and source code references. If no logs are specified, the run will be created without log entries. | {} |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to attach to the run (max 50 keys). Plain object of key/value pairs; values can be string, number, or boolean. Type is detected from the value. | struct() |
+| `unit_metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the unit under test (max 50 keys per unit). PATCH semantics: keys not present here are preserved on the unit. | struct() |
 
 ### Errors
 
@@ -247,6 +254,44 @@ response = sdk.Runs.createAttachment('550e8400-e29b-41d4-a716-446655440000', req
 | Field | Type | Required | Description | Example |
 | ----- | ---- | -------- | ----------- | ------- |
 | `name` | `string` | :heavy_check_mark: | File name including extension (e.g. "report.pdf"). Used to determine content type and display name. | Example Name |
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
+| Error 401 | 401 | application/json |
+| Error 404 | 404 | application/json |
+| Error 500 | 500 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 5XX | 5XX | application/json |
+
+## updateMetadata
+
+Upsert custom metadata on a run. Plain object of key/value pairs. PATCH semantics by default (omitted keys preserved). Pass `null` as a value to delete a key. Pass `metadata_replace: true` to drop all keys not present.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+req.metadata = struct();
+req.metadata_replace = true;
+
+response = sdk.Runs.updateMetadata('550e8400-e29b-41d4-a716-446655440000', req);
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `id` | `string` | :heavy_check_mark: | Unique identifier of the run to update. | 550e8400-e29b-41d4-a716-446655440000 |
+| `request` | `struct` | :heavy_check_mark: | Request body struct | — |
+
+#### Request Body Fields
+
+| Field | Type | Required | Description | Example |
+| ----- | ---- | -------- | ----------- | ------- |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the run. Plain object of key/value pairs. PATCH semantics: keys not present here are preserved. Pass `null` as a value to delete a key. Pass `metadata_replace: true` to drop all keys not present. | struct() |
+| `metadata_replace` | `logical (optional)` | :heavy_minus_sign: | When true, removes any metadata keys not present in `metadata`. Default: false. | true |
 
 ### Errors
 

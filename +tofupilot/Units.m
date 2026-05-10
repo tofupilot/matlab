@@ -58,6 +58,8 @@ classdef Units < handle
                 opts.cursor  = []
                 opts.sortBy (1,1) string = "created_at"
                 opts.sortOrder (1,1) string = "desc"
+                opts.metadata (1,1) string = ""
+                opts.includeMetadata (1,1) logical = false
             end
             queryParams = struct();
             if ~isempty(opts.searchQuery)
@@ -128,6 +130,12 @@ classdef Units < handle
             end
             if ~isempty(opts.sortOrder)
                 queryParams.sort_order = opts.sortOrder;
+            end
+            if ~isempty(opts.metadata)
+                queryParams.metadata = opts.metadata;
+            end
+            if ~isempty(opts.includeMetadata)
+                queryParams.include_metadata = opts.includeMetadata;
             end
             response = obj.Client.get('/v2/units', queryParams);
         end
