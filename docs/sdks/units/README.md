@@ -181,7 +181,6 @@ req.batch_number = 'BATCH-2024-Q1';
 req.attachments = {'value-1', 'value-2'};
 req.sample = 'example-value';
 req.metadata = struct();
-req.metadata_replace = true;
 
 response = sdk.Units.update('SN-001234', req);
 ```
@@ -203,8 +202,7 @@ response = sdk.Units.update('SN-001234', req);
 | `batch_number` | `string (optional)` | :heavy_minus_sign: | New batch number for the unit. Set to null to remove batch. | BATCH-2024-Q1 |
 | `attachments` | `cell array of string` | :heavy_minus_sign: | Array of upload IDs to attach to the unit. | {'value-1', 'value-2'} |
 | `sample` | `string (optional)` | :heavy_minus_sign: | Reference-sample classification. 'golden' marks a known-good reference unit; 'failing' marks a known-faulty reference unit. Both are excluded from production analytics by default. Set to null to clear and treat as a production unit. | example-value |
-| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the unit. Plain object of key/value pairs. PATCH semantics: keys not present here are preserved. Pass `null` as a value to delete a key. Pass `metadata_replace: true` to drop all keys not present. | struct() |
-| `metadata_replace` | `logical (optional)` | :heavy_minus_sign: | When true, removes any metadata keys not present in `metadata`. Default: false (PATCH). | true |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the unit. Plain object of key/value pairs. PATCH semantics: keys not present here are preserved. Pass `null` as a value to delete a key. | struct() |
 
 ### Errors
 

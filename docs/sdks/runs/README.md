@@ -267,14 +267,13 @@ response = sdk.Runs.createAttachment('550e8400-e29b-41d4-a716-446655440000', req
 
 ## updateMetadata
 
-Upsert custom metadata on a run. Plain object of key/value pairs. PATCH semantics by default (omitted keys preserved). Pass `null` as a value to delete a key. Pass `metadata_replace: true` to drop all keys not present.
+Upsert custom metadata on a run. Plain object of key/value pairs. PATCH semantics: omitted keys preserved. Pass `null` as a value to delete a key.
 ### Example Usage
 
 ```matlab
 sdk = tofupilot.TofuPilot('your-api-key');
 
 req.metadata = struct();
-req.metadata_replace = true;
 
 response = sdk.Runs.updateMetadata('550e8400-e29b-41d4-a716-446655440000', req);
 ```
@@ -290,8 +289,7 @@ response = sdk.Runs.updateMetadata('550e8400-e29b-41d4-a716-446655440000', req);
 
 | Field | Type | Required | Description | Example |
 | ----- | ---- | -------- | ----------- | ------- |
-| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the run. Plain object of key/value pairs. PATCH semantics: keys not present here are preserved. Pass `null` as a value to delete a key. Pass `metadata_replace: true` to drop all keys not present. | struct() |
-| `metadata_replace` | `logical (optional)` | :heavy_minus_sign: | When true, removes any metadata keys not present in `metadata`. Default: false. | true |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the run. Plain object of key/value pairs. PATCH semantics: keys not present here are preserved. Pass `null` as a value to delete a key. | struct() |
 
 ### Errors
 

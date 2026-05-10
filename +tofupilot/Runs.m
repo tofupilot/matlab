@@ -207,7 +207,7 @@ classdef Runs < handle
 
         function response = updateMetadata(obj, id, request)
             %UPDATEMETADATA Update run metadata
-            %   Upsert custom metadata on a run. Plain object of key/value pairs. PATCH semantics by default (omitted keys preserved). Pass `null` as a value to delete a key. Pass `metadata_replace: true` to drop all keys not present.
+            %   Upsert custom metadata on a run. Plain object of key/value pairs. PATCH semantics: omitted keys preserved. Pass `null` as a value to delete a key.
             arguments
                 obj
                 id (1,1) string
