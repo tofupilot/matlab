@@ -53,6 +53,7 @@ classdef Units < handle
                 opts.createdByUserIds  = []
                 opts.createdByStationIds  = []
                 opts.excludeUnitsWithParent (1,1) logical = false
+                opts.samples  = []
                 opts.limit (1,1) double = 50
                 opts.cursor  = []
                 opts.sortBy (1,1) string = "created_at"
@@ -112,6 +113,9 @@ classdef Units < handle
             end
             if ~isempty(opts.excludeUnitsWithParent)
                 queryParams.exclude_units_with_parent = opts.excludeUnitsWithParent;
+            end
+            if ~isempty(opts.samples)
+                queryParams.samples = opts.samples;
             end
             if ~isempty(opts.limit)
                 queryParams.limit = opts.limit;

@@ -146,6 +146,7 @@ req.production_branch = 'example-value';
 req.auto_push_enabled = true;
 req.excluded_branch_patterns = {'value-1', 'value-2'};
 req.root_directory = 'example-value';
+req.entry_point = 'example-value';
 
 response = sdk.Procedures.update('550e8400-e29b-41d4-a716-446655440000', req);
 ```
@@ -166,6 +167,7 @@ response = sdk.Procedures.update('550e8400-e29b-41d4-a716-446655440000', req);
 | `auto_push_enabled` | `logical (optional)` | :heavy_minus_sign: | Master switch for auto-pushing builds to linked stations. Build artifacts are always recorded; this only gates the station fan-out. | true |
 | `excluded_branch_patterns` | `cell array of string` | :heavy_minus_sign: | Branches matching any of these patterns (exact name or minimatch glob, e.g. "renovate/*") skip preview deployments. Empty array = no exclusions. | {'value-1', 'value-2'} |
 | `root_directory` | `string (optional)` | :heavy_minus_sign: | Path within the linked repo to the directory holding this procedure's `pyproject.toml` (and `procedure.yaml` for framework procedures). Empty/null = repo root. | example-value |
+| `entry_point` | `string (optional)` | :heavy_minus_sign: | Entry-point path inside the procedure's package dir, relative to it. Forwarded to the CLI through the deployment manifest. Empty/null = use the framework default (openhtf/plain → main.py, pytest → ".", yaml → procedure.yaml auto-discovery). | example-value |
 
 ### Errors
 

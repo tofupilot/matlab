@@ -47,6 +47,7 @@ response = sdk.Units.list('searchQuery', 'search-term', 'ids', {'value-1', 'valu
 | `createdByUserIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `createdByStationIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `excludeUnitsWithParent` | `logical (optional)` | :heavy_minus_sign: | N/A | false |
+| `samples` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
 | `limit` | `double (optional)` | :heavy_minus_sign: | Maximum number of units to return. | 20 |
 | `cursor` | `double (optional)` | :heavy_minus_sign: | N/A | 0 |
 | `sortBy` | `string` | :heavy_minus_sign: | Field to sort results by. last_run_at sorts by most recent test run date. last_run_procedure sorts by procedure name of the last run. | created_at |
@@ -73,6 +74,7 @@ sdk = tofupilot.TofuPilot('your-api-key');
 req.serial_number = 'SN-001234';
 req.part_number = 'PCB-V1.2';
 req.revision_number = 'REV-A';
+req.sample = 'example-value';
 
 response = sdk.Units.create(req);
 ```
@@ -90,6 +92,7 @@ response = sdk.Units.create(req);
 | `serial_number` | `string` | :heavy_check_mark: | Unique serial number identifier for the unit. Must be unique within the organization. | SN-001234 |
 | `part_number` | `string` | :heavy_check_mark: | Component part number that defines what type of unit this is. If the part does not exist, it will be created. | PCB-V1.2 |
 | `revision_number` | `string` | :heavy_check_mark: | Hardware revision identifier for the specific version of the part. If the revision does not exist, it will be created. | REV-A |
+| `sample` | `string (optional)` | :heavy_minus_sign: | Reference-sample classification. 'golden' marks a known-good reference unit; 'failing' marks a known-faulty reference unit. Both are excluded from production analytics aggregates (FPY, Cpk, throughput) by default. Omit or null for regular production units. | example-value |
 
 ### Errors
 
@@ -172,6 +175,7 @@ req.part_number = 'PCB-V1.2';
 req.revision_number = 'REV-A';
 req.batch_number = 'BATCH-2024-Q1';
 req.attachments = {'value-1', 'value-2'};
+req.sample = 'example-value';
 
 response = sdk.Units.update('SN-001234', req);
 ```
@@ -192,6 +196,7 @@ response = sdk.Units.update('SN-001234', req);
 | `revision_number` | `string (optional)` | :heavy_minus_sign: | New revision number for the unit. | REV-A |
 | `batch_number` | `string (optional)` | :heavy_minus_sign: | New batch number for the unit. Set to null to remove batch. | BATCH-2024-Q1 |
 | `attachments` | `cell array of string` | :heavy_minus_sign: | Array of upload IDs to attach to the unit. | {'value-1', 'value-2'} |
+| `sample` | `string (optional)` | :heavy_minus_sign: | Reference-sample classification. 'golden' marks a known-good reference unit; 'failing' marks a known-faulty reference unit. Both are excluded from production analytics by default. Set to null to clear and treat as a production unit. | example-value |
 
 ### Errors
 
