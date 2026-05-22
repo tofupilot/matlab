@@ -1,6 +1,6 @@
-# TofuPilot MATLAB Client
+# TofuPilot MATLAB SDK
 
-MATLAB client for the [TofuPilot](https://tofupilot.com) REST API. Struct-based, with retries and request lifecycle hooks.
+MATLAB SDK for the [TofuPilot](https://tofupilot.com) REST API. Struct-based, with retries and request lifecycle hooks.
 
 ## Installation
 
@@ -142,6 +142,13 @@ sdk = tofupilot.TofuPilot('your-api-key', ...
 
 - MATLAB R2019b or later
 - No additional toolboxes required
+
+## Documentation
+
+- [Getting Started](https://tofupilot.com/docs/getting-started-with-tofupilot)
+- [MATLAB SDK Guide](https://tofupilot.com/docs/sdk/matlab)
+- [API Reference](https://tofupilot.com/docs/api/rest-api)
+- [Changelog](https://tofupilot.com/changelog)
 
 ## License
 
