@@ -10,7 +10,7 @@
 
 ## get
 
-Retrieve a single procedure version by its tag, including version metadata and configuration details.
+Get a procedure version by tag, with its metadata and configuration.
 ### Example Usage
 
 ```matlab
@@ -33,13 +33,13 @@ response = sdk.Procedures.Versions.get('550e8400-e29b-41d4-a716-446655440000', '
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## delete
 
-Permanently delete a procedure version by its tag. This removes the version record and all associated configuration data and cannot be undone.
+Delete a procedure version by tag. Irreversible.
 ### Example Usage
 
 ```matlab
@@ -63,13 +63,13 @@ response = sdk.Procedures.Versions.delete('550e8400-e29b-41d4-a716-446655440000'
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
 | Error 409 | 409 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## create
 
-Create a new version for an existing test procedure. Versions let you track procedure changes over time and maintain a history of test configurations.
+Create a version of a procedure. Versions snapshot procedure configuration over time.
 ### Example Usage
 
 ```matlab
@@ -100,7 +100,7 @@ response = sdk.Procedures.Versions.create('550e8400-e29b-41d4-a716-446655440000'
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
 | Error 409 | 409 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 

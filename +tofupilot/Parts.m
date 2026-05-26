@@ -2,11 +2,11 @@ classdef Parts < handle
     %PARTS Parts resource operations.
     %
     %   Methods:
-    %     list - List and filter parts
     %     create - Create part
+    %     list - List and filter parts
     %     get - Get part
-    %     delete - Delete part
     %     update - Update part
+    %     delete - Delete part
     %
     %   See also tofupilot.TofuPilot
 
@@ -27,9 +27,19 @@ classdef Parts < handle
             obj.Client = client;
         end
 
+        function response = create(obj, request)
+            %CREATE Create part
+            %   Create a part, optionally with an initial revision. Part numbers match case-insensitively ("PART-001" == "part-001").
+            arguments
+                obj
+                request struct = struct()
+            end
+            response = obj.Client.post('/v2/parts', request);
+        end
+
         function response = list(obj, opts)
             %LIST List and filter parts
-            %   Retrieve a paginated list of parts and components in your organization. Filter and search by part name, number, or revision number for inventory management.
+            %   List parts. Filter and search by name, number, or revision number. Cursor-paginated.
             arguments
                 obj
                 opts.limit (1,1) double = 50
@@ -61,19 +71,9 @@ classdef Parts < handle
             response = obj.Client.get('/v2/parts', queryParams);
         end
 
-        function response = create(obj, request)
-            %CREATE Create part
-            %   Create a new part. Optionally create with a revision. Part numbers are matched case-insensitively (e.g., "PART-001" and "part-001" are considered the same).
-            arguments
-                obj
-                request struct = struct()
-            end
-            response = obj.Client.post('/v2/parts', request);
-        end
-
         function response = get(obj, number)
             %GET Get part
-            %   Retrieve a single part by its number, including all revisions, metadata, and linked units. Part numbers are matched case-insensitively.
+            %   Get a part by number, with its revisions, metadata, and linked units. Numbers match case-insensitively.
             arguments
                 obj
                 number (1,1) string
@@ -82,20 +82,9 @@ classdef Parts < handle
             response = obj.Client.get(path);
         end
 
-        function response = delete(obj, number)
-            %DELETE Delete part
-            %   Permanently delete a part and all its revisions. This removes all associated data and cannot be undone.
-            arguments
-                obj
-                number (1,1) string
-            end
-            path = sprintf('/v2/parts/%s', number);
-            response = obj.Client.delete(path);
-        end
-
         function response = update(obj, number, request)
             %UPDATE Update part
-            %   Update a part's number or name. Identifies the part by its current number in the URL with case-insensitive matching.
+            %   Update a part's number or name. Numbers match case-insensitively.
             arguments
                 obj
                 number (1,1) string
@@ -103,6 +92,17 @@ classdef Parts < handle
             end
             path = sprintf('/v2/parts/%s', number);
             response = obj.Client.patch(path, request);
+        end
+
+        function response = delete(obj, number)
+            %DELETE Delete part
+            %   Delete a part and all its revisions. Irreversible.
+            arguments
+                obj
+                number (1,1) string
+            end
+            path = sprintf('/v2/parts/%s', number);
+            response = obj.Client.delete(path);
         end
     end
 end

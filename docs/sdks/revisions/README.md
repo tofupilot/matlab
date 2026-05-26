@@ -5,13 +5,13 @@
 ### Available Operations
 
 * [get](#get) - Get part revision
-* [delete](#delete) - Delete part revision
 * [update](#update) - Update part revision
+* [delete](#delete) - Delete part revision
 * [create](#create) - Create part revision
 
 ## get
 
-Retrieve a single part revision by its part number and revision number, including revision metadata, configuration details, and linked units.
+Get a part revision by part number and revision number, with its metadata, configuration, and linked units.
 ### Example Usage
 
 ```matlab
@@ -34,42 +34,13 @@ response = sdk.Parts.Revisions.get('PCB-V1.2', 'REV-A');
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
-| Error 5XX | 5XX | application/json |
-
-## delete
-
-Permanently delete a part revision by its part number and revision number. This action removes the revision and all associated data and cannot be undone.
-### Example Usage
-
-```matlab
-sdk = tofupilot.TofuPilot('your-api-key');
-
-response = sdk.Parts.Revisions.delete('PCB-V1.2', 'REV-A');
-```
-
-### Parameters
-
-| Parameter | Type | Required | Description | Example |
-| --------- | ---- | -------- | ----------- | ------- |
-| `part_number` | `string` | :heavy_check_mark: | Part number that the revision belongs to. | PCB-V1.2 |
-| `revision_number` | `string` | :heavy_check_mark: | Revision number to delete. | REV-A |
-
-
-### Errors
-
-| Error Type | Status Code | Content Type |
-| ---------- | ----------- | ------------ |
-| Error 401 | 401 | application/json |
-| Error 404 | 404 | application/json |
 | Error 500 | 500 | application/json |
-| Error 4XX | 4XX | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## update
 
-Update a part revision's number or image. Identifies the revision by part number and revision number in the URL.
+Update a revision's number or image.
 ### Example Usage
 
 ```matlab
@@ -103,13 +74,42 @@ response = sdk.Parts.Revisions.update('PCB-V1.2', 'REV-A', req);
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
 | Error 409 | 409 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
+| Error 5XX | 5XX | application/json |
+
+## delete
+
+Delete a part revision. Irreversible.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+response = sdk.Parts.Revisions.delete('PCB-V1.2', 'REV-A');
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `part_number` | `string` | :heavy_check_mark: | Part number that the revision belongs to. | PCB-V1.2 |
+| `revision_number` | `string` | :heavy_check_mark: | Revision number to delete. | REV-A |
+
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
+| Error 401 | 401 | application/json |
+| Error 404 | 404 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## create
 
-Create a new part revision for an existing part. Revision numbers are matched case-insensitively (e.g., "REV-A" and "rev-a" are considered the same).
+Create a revision of a part. Revision numbers match case-insensitively ("REV-A" == "rev-a").
 ### Example Usage
 
 ```matlab
@@ -140,7 +140,7 @@ response = sdk.Parts.Revisions.create('PCB-V1.2', req);
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
 | Error 409 | 409 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 

@@ -14,7 +14,8 @@ classdef TofuPilot < handle
     %     sdk.Parts, sdk.Parts.Revisions
     %     sdk.Batches
     %     sdk.Stations
-    %     sdk.User
+    %     sdk.Users
+    %     sdk.Imports
     %
     %   Hooks:
     %     sdk = tofupilot.TofuPilot('key', 'BeforeRequest', {@(ctx) disp(ctx.path)})
@@ -35,7 +36,8 @@ classdef TofuPilot < handle
         Parts  % tofupilot.Parts
         Batches  % tofupilot.Batches
         Stations  % tofupilot.Stations
-        User  % tofupilot.User
+        Users  % tofupilot.Users
+        Imports  % tofupilot.Imports
     end
 
     properties (Access = private)
@@ -80,7 +82,8 @@ classdef TofuPilot < handle
             obj.Parts = tofupilot.Parts(obj.Client);
             obj.Batches = tofupilot.Batches(obj.Client);
             obj.Stations = tofupilot.Stations(obj.Client);
-            obj.User = tofupilot.User(obj.Client);
+            obj.Users = tofupilot.Users(obj.Client);
+            obj.Imports = tofupilot.Imports(obj.Client);
             obj.Procedures.Versions = tofupilot.Versions(obj.Client);
             obj.Parts.Revisions = tofupilot.Revisions(obj.Client);
         end

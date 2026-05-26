@@ -4,46 +4,16 @@
 
 ### Available Operations
 
-* [list](#list) - List and filter stations
 * [create](#create) - Create station
+* [list](#list) - List and filter stations
 * [getCurrent](#getcurrent) - Get current station
 * [get](#get) - Get station
-* [remove](#remove) - Remove station
 * [update](#update) - Update station
-
-## list
-
-Retrieve a paginated list of test stations in your organization. Search by station name and filter by status for station fleet management.
-### Example Usage
-
-```matlab
-sdk = tofupilot.TofuPilot('your-api-key');
-
-response = sdk.Stations.list('limit', 20, 'cursor', 0, 'searchQuery', 'search-term');
-```
-
-### Parameters
-
-| Parameter | Type | Required | Description | Example |
-| --------- | ---- | -------- | ----------- | ------- |
-| `limit` | `double (optional)` | :heavy_minus_sign: | Number of stations to return per page | 20 |
-| `cursor` | `double (optional)` | :heavy_minus_sign: | N/A | 0 |
-| `searchQuery` | `string (optional)` | :heavy_minus_sign: | N/A | search-term |
-| `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-
-
-### Errors
-
-| Error Type | Status Code | Content Type |
-| ---------- | ----------- | ------------ |
-| Error 401 | 401 | application/json |
-| Error 500 | 500 | application/json |
-| Error 4XX | 4XX | application/json |
-| Error 5XX | 5XX | application/json |
+* [remove](#remove) - Remove station
 
 ## create
 
-Create a new test station in TofuPilot to register production equipment and link it to test procedures.
+Create a station to register production equipment and link it to procedures.
 ### Example Usage
 
 ```matlab
@@ -75,13 +45,43 @@ response = sdk.Stations.create(req);
 | Error 401 | 401 | application/json |
 | Error 403 | 403 | application/json |
 | Error 409 | 409 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
+| Error 5XX | 5XX | application/json |
+
+## list
+
+List stations. Search by name and filter by status. Cursor-paginated.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+response = sdk.Stations.list('limit', 20, 'cursor', 0, 'searchQuery', 'search-term');
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `limit` | `double (optional)` | :heavy_minus_sign: | Number of stations to return per page | 20 |
+| `cursor` | `double (optional)` | :heavy_minus_sign: | N/A | 0 |
+| `searchQuery` | `string (optional)` | :heavy_minus_sign: | N/A | search-term |
+| `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
+| Error 401 | 401 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## getCurrent
 
-Retrieve detailed information about the currently authenticated station including linked procedures and connection status.
+Get the station the request is authenticated as, with its linked procedures and connection status.
 ### Example Usage
 
 ```matlab
@@ -101,13 +101,13 @@ No parameters required.
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 403 | 403 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## get
 
-Retrieve detailed station information including linked procedures, connection status, and recent activity.
+Get a station by ID, with its linked procedures, connection status, and recent activity.
 ### Example Usage
 
 ```matlab
@@ -129,42 +129,13 @@ response = sdk.Stations.get('550e8400-e29b-41d4-a716-446655440000');
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
-| Error 5XX | 5XX | application/json |
-
-## remove
-
-Remove a test station. Deletes permanently if unused, or archives with preserved historical data if runs exist.
-### Example Usage
-
-```matlab
-sdk = tofupilot.TofuPilot('your-api-key');
-
-response = sdk.Stations.remove('550e8400-e29b-41d4-a716-446655440000');
-```
-
-### Parameters
-
-| Parameter | Type | Required | Description | Example |
-| --------- | ---- | -------- | ----------- | ------- |
-| `id` | `string` | :heavy_check_mark: | Unique identifier of the station to remove | 550e8400-e29b-41d4-a716-446655440000 |
-
-
-### Errors
-
-| Error Type | Status Code | Content Type |
-| ---------- | ----------- | ------------ |
-| Error 400 | 400 | application/json |
-| Error 401 | 401 | application/json |
-| Error 404 | 404 | application/json |
 | Error 500 | 500 | application/json |
-| Error 4XX | 4XX | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## update
 
-Update station name and/or image. The station ID is specified in the URL path. To remove an image, pass an empty string for image_id.
+Update a station name and/or image. Pass an empty string for image_id to remove the image.
 ### Example Usage
 
 ```matlab
@@ -199,7 +170,36 @@ response = sdk.Stations.update('550e8400-e29b-41d4-a716-446655440000', req);
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
 | Error 409 | 409 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
+| Error 5XX | 5XX | application/json |
+
+## remove
+
+Remove a station. Deleted if unused; archived (history preserved) if runs reference it.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+response = sdk.Stations.remove('550e8400-e29b-41d4-a716-446655440000');
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `id` | `string` | :heavy_check_mark: | Unique identifier of the station to remove | 550e8400-e29b-41d4-a716-446655440000 |
+
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
+| Error 400 | 400 | application/json |
+| Error 401 | 401 | application/json |
+| Error 404 | 404 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 

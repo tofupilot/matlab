@@ -4,8 +4,8 @@
 
 ### Available Operations
 
-* [list](#list) - List and filter units
 * [create](#create) - Create unit
+* [list](#list) - List and filter units
 * [delete](#delete) - Delete units
 * [get](#get) - Get unit
 * [update](#update) - Update unit
@@ -14,9 +14,53 @@
 * [createAttachment](#createattachment) - Attach file to unit
 * [deleteAttachment](#deleteattachment) - Delete unit attachments
 
+## create
+
+Create a unit with a serial number and link it to a part revision.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+req.serial_number = 'SN-001234';
+req.part_number = 'PCB-V1.2';
+req.revision_number = 'REV-A';
+req.sample = struct();
+req.metadata = struct();
+
+response = sdk.Units.create(req);
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `request` | `struct` | :heavy_check_mark: | Request body struct | — |
+
+#### Request Body Fields
+
+| Field | Type | Required | Description | Example |
+| ----- | ---- | -------- | ----------- | ------- |
+| `serial_number` | `string` | :heavy_check_mark: | Unique serial number identifier for the unit. Must be unique within the organization. | SN-001234 |
+| `part_number` | `string` | :heavy_check_mark: | Component part number that defines what type of unit this is. If the part does not exist, it will be created. | PCB-V1.2 |
+| `revision_number` | `string` | :heavy_check_mark: | Hardware revision identifier for the specific version of the part. If the revision does not exist, it will be created. | REV-A |
+| `sample` | `string` | :heavy_minus_sign: | Reference-sample classification. 'golden' marks a known-good reference unit; 'failing' marks a known-faulty reference unit. Both are excluded from production analytics aggregates (FPY, Cpk, throughput) by default. Omit or null for regular production units. | struct() |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to attach to the unit (max 50 keys per unit). Plain object of key/value pairs; values can be string, number, or boolean. Type is detected from the value. | struct() |
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
+| Error 401 | 401 | application/json |
+| Error 404 | 404 | application/json |
+| Error 409 | 409 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
+| Error 5XX | 5XX | application/json |
+
 ## list
 
-Retrieve a paginated list of units with filtering by serial number, part number, and batch. Uses cursor-based pagination for efficient large dataset traversal.
+List units with filtering by serial number, part number, and batch. Cursor-paginated.
 ### Example Usage
 
 ```matlab
@@ -52,7 +96,7 @@ response = sdk.Units.list('searchQuery', 'search-term', 'ids', {'value-1', 'valu
 | `cursor` | `double (optional)` | :heavy_minus_sign: | N/A | 0 |
 | `sortBy` | `string` | :heavy_minus_sign: | Field to sort results by. last_run_at sorts by most recent test run date. last_run_procedure sorts by procedure name of the last run. | created_at |
 | `sortOrder` | `string` | :heavy_minus_sign: | Sort order direction. | desc |
-| `metadata` | `any` | :heavy_minus_sign: | Filter units by custom metadata. Supports up to 5 keys per request. Per-key operators: string `{in: [...]}`/`{contains: "..."}`, number `{gte, lte, gt, lt, eq}`, bool `{eq: true\|false}`. | struct() |
+| `metadata` | `string` | :heavy_minus_sign: | Filter units by custom metadata. Supports up to 5 keys per request. Per-key operators: string `{in: [...]}`/`{contains: "..."}`, number `{gte, lte, gt, lt, eq}`, bool `{eq: true\|false}`. | struct() |
 | `includeMetadata` | `logical (optional)` | :heavy_minus_sign: | When true, includes the unit metadata array in the response. Defaults to false to keep payloads small. | false |
 
 
@@ -61,57 +105,13 @@ response = sdk.Units.list('searchQuery', 'search-term', 'ids', {'value-1', 'valu
 | Error Type | Status Code | Content Type |
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
-| Error 5XX | 5XX | application/json |
-
-## create
-
-Create a new unit with a serial number and link it to a part revision. Units represent individual hardware items tracked for manufacturing traceability.
-### Example Usage
-
-```matlab
-sdk = tofupilot.TofuPilot('your-api-key');
-
-req.serial_number = 'SN-001234';
-req.part_number = 'PCB-V1.2';
-req.revision_number = 'REV-A';
-req.sample = 'example-value';
-req.metadata = struct();
-
-response = sdk.Units.create(req);
-```
-
-### Parameters
-
-| Parameter | Type | Required | Description | Example |
-| --------- | ---- | -------- | ----------- | ------- |
-| `request` | `struct` | :heavy_check_mark: | Request body struct | — |
-
-#### Request Body Fields
-
-| Field | Type | Required | Description | Example |
-| ----- | ---- | -------- | ----------- | ------- |
-| `serial_number` | `string` | :heavy_check_mark: | Unique serial number identifier for the unit. Must be unique within the organization. | SN-001234 |
-| `part_number` | `string` | :heavy_check_mark: | Component part number that defines what type of unit this is. If the part does not exist, it will be created. | PCB-V1.2 |
-| `revision_number` | `string` | :heavy_check_mark: | Hardware revision identifier for the specific version of the part. If the revision does not exist, it will be created. | REV-A |
-| `sample` | `string (optional)` | :heavy_minus_sign: | Reference-sample classification. 'golden' marks a known-good reference unit; 'failing' marks a known-faulty reference unit. Both are excluded from production analytics aggregates (FPY, Cpk, throughput) by default. Omit or null for regular production units. | example-value |
-| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to attach to the unit (max 50 keys per unit). Plain object of key/value pairs; values can be string, number, or boolean. Type is detected from the value. | struct() |
-
-### Errors
-
-| Error Type | Status Code | Content Type |
-| ---------- | ----------- | ------------ |
-| Error 401 | 401 | application/json |
-| Error 404 | 404 | application/json |
-| Error 409 | 409 | application/json |
 | Error 500 | 500 | application/json |
-| Error 4XX | 4XX | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## delete
 
-Permanently delete units by serial number. This action will remove all nested elements and relationships associated with the units.
+Delete units by serial number. Sub-units are unlinked, not deleted. Irreversible.
 ### Example Usage
 
 ```matlab
@@ -133,13 +133,13 @@ response = sdk.Units.delete('serialNumbers', {'value-1', 'value-2'});
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## get
 
-Retrieve a single unit by its serial number. Returns comprehensive unit data including part information, parent/child relationships, and test run history.
+Get a unit by serial number, with its part, parent/child links, and run history.
 ### Example Usage
 
 ```matlab
@@ -162,13 +162,13 @@ response = sdk.Units.get('SN-001234');
 | Error 400 | 400 | application/json |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## update
 
-Update unit properties including serial number, part revision, batch assignment, and file attachments with case-insensitive matching.
+Update a unit: serial number, part revision, batch, and file attachments.
 ### Example Usage
 
 ```matlab
@@ -179,7 +179,7 @@ req.part_number = 'PCB-V1.2';
 req.revision_number = 'REV-A';
 req.batch_number = 'BATCH-2024-Q1';
 req.attachments = {'value-1', 'value-2'};
-req.sample = 'example-value';
+req.sample = struct();
 req.metadata = struct();
 
 response = sdk.Units.update('SN-001234', req);
@@ -201,7 +201,7 @@ response = sdk.Units.update('SN-001234', req);
 | `revision_number` | `string (optional)` | :heavy_minus_sign: | New revision number for the unit. | REV-A |
 | `batch_number` | `string (optional)` | :heavy_minus_sign: | New batch number for the unit. Set to null to remove batch. | BATCH-2024-Q1 |
 | `attachments` | `cell array of string` | :heavy_minus_sign: | Array of upload IDs to attach to the unit. | {'value-1', 'value-2'} |
-| `sample` | `string (optional)` | :heavy_minus_sign: | Reference-sample classification. 'golden' marks a known-good reference unit; 'failing' marks a known-faulty reference unit. Both are excluded from production analytics by default. Set to null to clear and treat as a production unit. | example-value |
+| `sample` | `string` | :heavy_minus_sign: | Reference-sample classification. 'golden' marks a known-good reference unit; 'failing' marks a known-faulty reference unit. Both are excluded from production analytics by default. Set to null to clear and treat as a production unit. | struct() |
 | `metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the unit. Plain object of key/value pairs. PATCH semantics: keys not present here are preserved. Pass `null` as a value to delete a key. | struct() |
 
 ### Errors
@@ -211,13 +211,13 @@ response = sdk.Units.update('SN-001234', req);
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
 | Error 409 | 409 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## addChild
 
-Add a sub-unit to a parent unit to track component assemblies and multi-level hardware traceability.
+Link a sub-unit to a parent unit to track assemblies.
 ### Example Usage
 
 ```matlab
@@ -248,13 +248,13 @@ response = sdk.Units.addChild('SN-001234', req);
 | Error 400 | 400 | application/json |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## removeChild
 
-Remove a sub-unit relationship from a parent unit by serial number. Only unlinks the parent-child relationship; neither unit is deleted from the system.
+Unlink a sub-unit from its parent. Neither unit is deleted.
 ### Example Usage
 
 ```matlab
@@ -278,13 +278,13 @@ response = sdk.Units.removeChild('SN-001234', 'childSerialNumber', 'SUB-001');
 | Error 400 | 400 | application/json |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## createAttachment
 
-Create an attachment linked to a unit and get a temporary pre-signed URL. Upload the file to the URL with a PUT request to complete the attachment.
+Attach a file to a unit. Returns an upload ID and pre-signed URL; PUT the file to the URL, then call Finalize upload to commit.
 ### Example Usage
 
 ```matlab
@@ -314,13 +314,13 @@ response = sdk.Units.createAttachment('SN-001234', req);
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## deleteAttachment
 
-Delete attachments from a unit by their IDs. Removes the files from storage and unlinks them from the unit.
+Delete attachments from a unit by ID. Removes the files from storage and unlinks them.
 ### Example Usage
 
 ```matlab
@@ -343,7 +343,7 @@ response = sdk.Units.deleteAttachment('SN-001234', 'ids', {'value-1', 'value-2'}
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 

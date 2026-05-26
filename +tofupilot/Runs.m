@@ -2,8 +2,8 @@ classdef Runs < handle
     %RUNS Runs resource operations.
     %
     %   Methods:
-    %     list - List and filter runs
     %     create - Create run
+    %     list - List and filter runs
     %     delete - Delete runs
     %     get - Get run
     %     update - Update run
@@ -28,9 +28,19 @@ classdef Runs < handle
             obj.Client = client;
         end
 
+        function response = create(obj, request)
+            %CREATE Create run
+            %   Create a run linked to a procedure and unit. Existing procedures and units are reused automatically.
+            arguments
+                obj
+                request struct = struct()
+            end
+            response = obj.Client.post('/v2/runs', request);
+        end
+
         function response = list(obj, opts)
             %LIST List and filter runs
-            %   Retrieve a paginated list of test runs with filtering by unit, procedure, date range, outcome, and station.
+            %   List runs with filtering by unit, procedure, date range, outcome, and station. Cursor-paginated.
             arguments
                 obj
                 opts.searchQuery (1,1) string = ""
@@ -146,19 +156,9 @@ classdef Runs < handle
             response = obj.Client.get('/v2/runs', queryParams);
         end
 
-        function response = create(obj, request)
-            %CREATE Create run
-            %   Create a new test run, linking it to a procedure and unit. Existing entities are reused automatically.
-            arguments
-                obj
-                request struct = struct()
-            end
-            response = obj.Client.post('/v2/runs', request);
-        end
-
         function response = delete(obj, opts)
             %DELETE Delete runs
-            %   Permanently delete test runs by their IDs. Removes all associated phases, measurements, and attachments.
+            %   Delete runs by ID. Also removes their phases, measurements, and attachments. Irreversible.
             arguments
                 obj
                 opts.ids  = []
@@ -172,7 +172,7 @@ classdef Runs < handle
 
         function response = get(obj, id)
             %GET Get run
-            %   Retrieve a single test run by its ID. Returns comprehensive run data including metadata, phases, measurements, and logs.
+            %   Get a run by ID, with its metadata, phases, measurements, and logs.
             arguments
                 obj
                 id (1,1) string
@@ -183,7 +183,7 @@ classdef Runs < handle
 
         function response = update(obj, id, request)
             %UPDATE Update run
-            %   Update a test run, including linking file attachments. Files must be uploaded via Initialize upload and Finalize upload before linking.
+            %   Link uploaded files to a run. Upload files via Initialize and Finalize first, then call this to attach them.
             arguments
                 obj
                 id (1,1) string
@@ -195,7 +195,7 @@ classdef Runs < handle
 
         function response = createAttachment(obj, id, request)
             %CREATEATTACHMENT Attach file to run
-            %   Create an attachment linked to a run and get a temporary pre-signed URL. Upload the file to the URL with a PUT request to complete the attachment.
+            %   Attach a file to a run. Returns an upload ID and pre-signed URL; PUT the file to the URL, then call Finalize upload to commit.
             arguments
                 obj
                 id (1,1) string
@@ -207,7 +207,7 @@ classdef Runs < handle
 
         function response = updateMetadata(obj, id, request)
             %UPDATEMETADATA Update run metadata
-            %   Upsert custom metadata on a run. Plain object of key/value pairs. PATCH semantics: omitted keys preserved. Pass `null` as a value to delete a key.
+            %   Upsert custom metadata on a run as a key/value object. Omitted keys are preserved; pass `null` to delete a key.
             arguments
                 obj
                 id (1,1) string

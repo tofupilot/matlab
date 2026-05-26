@@ -4,71 +4,17 @@
 
 ### Available Operations
 
-* [list](#list) - List and filter runs
 * [create](#create) - Create run
+* [list](#list) - List and filter runs
 * [delete](#delete) - Delete runs
 * [get](#get) - Get run
 * [update](#update) - Update run
 * [createAttachment](#createattachment) - Attach file to run
 * [updateMetadata](#updatemetadata) - Update run metadata
 
-## list
-
-Retrieve a paginated list of test runs with filtering by unit, procedure, date range, outcome, and station.
-### Example Usage
-
-```matlab
-sdk = tofupilot.TofuPilot('your-api-key');
-
-response = sdk.Runs.list('searchQuery', 'search-term', 'ids', {'value-1', 'value-2'}, 'outcomes', {'PASS', 'FAIL'});
-```
-
-### Parameters
-
-| Parameter | Type | Required | Description | Example |
-| --------- | ---- | -------- | ----------- | ------- |
-| `searchQuery` | `string (optional)` | :heavy_minus_sign: | N/A | search-term |
-| `ids` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `outcomes` | `cell array of string` | :heavy_minus_sign: | N/A | {'PASS', 'FAIL'} |
-| `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `procedureVersions` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `serialNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `samples` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
-| `partNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `revisionNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `batchNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `durationMin` | `string (optional)` | :heavy_minus_sign: | N/A | example-value |
-| `durationMax` | `string (optional)` | :heavy_minus_sign: | N/A | example-value |
-| `startedAfter` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
-| `startedBefore` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
-| `endedAfter` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
-| `endedBefore` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
-| `createdAfter` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
-| `createdBefore` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
-| `createdByUserIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `createdByStationIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `operatedByIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `limit` | `double (optional)` | :heavy_minus_sign: | Maximum number of runs to return per page. | 20 |
-| `cursor` | `double (optional)` | :heavy_minus_sign: | N/A | 0 |
-| `sortBy` | `string` | :heavy_minus_sign: | Field to sort results by. | created_at |
-| `sortOrder` | `string` | :heavy_minus_sign: | Sort order direction. | desc |
-| `metadata` | `any` | :heavy_minus_sign: | Filter runs by custom metadata. Supports up to 5 keys per request. Per-key operators: string `{in: [...]}`/`{contains: "..."}`, number `{gte, lte, gt, lt, eq}`, bool `{eq: true\|false}`. | struct() |
-| `includeMetadata` | `logical (optional)` | :heavy_minus_sign: | When true, includes the run metadata array in the response. Defaults to false to keep payloads small. | false |
-
-
-### Errors
-
-| Error Type | Status Code | Content Type |
-| ---------- | ----------- | ------------ |
-| Error 400 | 400 | application/json |
-| Error 401 | 401 | application/json |
-| Error 500 | 500 | application/json |
-| Error 4XX | 4XX | application/json |
-| Error 5XX | 5XX | application/json |
-
 ## create
 
-Create a new test run, linking it to a procedure and unit. Existing entities are reused automatically.
+Create a run linked to a procedure and unit. Existing procedures and units are reused automatically.
 ### Example Usage
 
 ```matlab
@@ -107,8 +53,8 @@ response = sdk.Runs.create(req);
 | ----- | ---- | -------- | ----------- | ------- |
 | `outcome` | `string` | :heavy_check_mark: | Overall test result. Use PASS when test succeeds, FAIL when test fails but script execution completed successfully, ERROR when script execution fails, TIMEOUT when test exceeds time limit, ABORTED for manual script interruption. | PASS |
 | `procedure_id` | `string` | :heavy_check_mark: | Procedure ID. Create the procedure in the app first, then find the auto-generated ID on the procedure page. | 550e8400-e29b-41d4-a716-446655440000 |
-| `deployment_id` | `string (optional)` | :heavy_minus_sign: | N/A | example-value |
-| `procedure_version` | `string (optional)` | :heavy_minus_sign: | N/A | v1.2.3 |
+| `deployment_id` | `string (optional)` | :heavy_minus_sign: | Deployment ID this run was executed from. Set by the CLI when running a pulled deployment so the run is linked back to the exact build it ran. Validated against the procedure; left null for ad-hoc or local runs. | example-value |
+| `procedure_version` | `string (optional)` | :heavy_minus_sign: | Specific version of the test procedure used for the run. Matched case-insensitively. If none exist, a procedure with this procedure version will be created. If no procedure version is specified, the run will not be linked to any specific version. | v1.2.3 |
 | `operated_by` | `string (optional)` | :heavy_minus_sign: | Email address of the operator who executed the test run. Honored only for API-key callers (user keys and station keys); browser session callers are auto-stamped with the session user and this field is ignored. If the email does not match a member of the calling organization, it is silently dropped and the run is recorded with no operator. The run is linked to this user (when resolved) to track who performed the test. | john.doe@example.com |
 | `started_at` | `string` | :heavy_check_mark: | ISO 8601 timestamp when the test run began execution. This timestamp will be used to track when the test execution started and for historical analysis of test runs. A separate created_at timestamp is stored internally server side to track upload date. | 2026-01-15T10:30:00Z |
 | `ended_at` | `string` | :heavy_check_mark: | ISO 8601 timestamp when the test run finished execution. | 2026-01-15T10:35:30Z |
@@ -132,13 +78,67 @@ response = sdk.Runs.create(req);
 | Error 403 | 403 | application/json |
 | Error 404 | 404 | application/json |
 | Error 422 | 422 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
+| Error 5XX | 5XX | application/json |
+
+## list
+
+List runs with filtering by unit, procedure, date range, outcome, and station. Cursor-paginated.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+response = sdk.Runs.list('searchQuery', 'search-term', 'ids', {'value-1', 'value-2'}, 'outcomes', {'PASS', 'FAIL'});
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `searchQuery` | `string (optional)` | :heavy_minus_sign: | N/A | search-term |
+| `ids` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `outcomes` | `cell array of string` | :heavy_minus_sign: | N/A | {'PASS', 'FAIL'} |
+| `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `procedureVersions` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `serialNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `samples` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
+| `partNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `revisionNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `batchNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `durationMin` | `string (optional)` | :heavy_minus_sign: | N/A | example-value |
+| `durationMax` | `string (optional)` | :heavy_minus_sign: | N/A | example-value |
+| `startedAfter` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
+| `startedBefore` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
+| `endedAfter` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
+| `endedBefore` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
+| `createdAfter` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
+| `createdBefore` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
+| `createdByUserIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `createdByStationIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `operatedByIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `limit` | `double (optional)` | :heavy_minus_sign: | Maximum number of runs to return per page. | 20 |
+| `cursor` | `double (optional)` | :heavy_minus_sign: | N/A | 0 |
+| `sortBy` | `string` | :heavy_minus_sign: | Field to sort results by. | created_at |
+| `sortOrder` | `string` | :heavy_minus_sign: | Sort order direction. | desc |
+| `metadata` | `string` | :heavy_minus_sign: | Filter runs by custom metadata. Supports up to 5 keys per request. Per-key operators: string `{in: [...]}`/`{contains: "..."}`, number `{gte, lte, gt, lt, eq}`, bool `{eq: true\|false}`. | struct() |
+| `includeMetadata` | `logical (optional)` | :heavy_minus_sign: | When true, includes the run metadata array in the response. Defaults to false to keep payloads small. | false |
+
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
+| Error 400 | 400 | application/json |
+| Error 401 | 401 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## delete
 
-Permanently delete test runs by their IDs. Removes all associated phases, measurements, and attachments.
+Delete runs by ID. Also removes their phases, measurements, and attachments. Irreversible.
 ### Example Usage
 
 ```matlab
@@ -160,13 +160,13 @@ response = sdk.Runs.delete('ids', {'value-1', 'value-2'});
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## get
 
-Retrieve a single test run by its ID. Returns comprehensive run data including metadata, phases, measurements, and logs.
+Get a run by ID, with its metadata, phases, measurements, and logs.
 ### Example Usage
 
 ```matlab
@@ -189,13 +189,13 @@ response = sdk.Runs.get('550e8400-e29b-41d4-a716-446655440000');
 | Error 400 | 400 | application/json |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## update
 
-Update a test run, including linking file attachments. Files must be uploaded via Initialize upload and Finalize upload before linking.
+Link uploaded files to a run. Upload files via Initialize and Finalize first, then call this to attach them.
 ### Example Usage
 
 ```matlab
@@ -225,13 +225,13 @@ response = sdk.Runs.update('550e8400-e29b-41d4-a716-446655440000', req);
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## createAttachment
 
-Create an attachment linked to a run and get a temporary pre-signed URL. Upload the file to the URL with a PUT request to complete the attachment.
+Attach a file to a run. Returns an upload ID and pre-signed URL; PUT the file to the URL, then call Finalize upload to commit.
 ### Example Usage
 
 ```matlab
@@ -261,13 +261,13 @@ response = sdk.Runs.createAttachment('550e8400-e29b-41d4-a716-446655440000', req
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## updateMetadata
 
-Upsert custom metadata on a run. Plain object of key/value pairs. PATCH semantics: omitted keys preserved. Pass `null` as a value to delete a key.
+Upsert custom metadata on a run as a key/value object. Omitted keys are preserved; pass `null` to delete a key.
 ### Example Usage
 
 ```matlab
@@ -297,7 +297,7 @@ response = sdk.Runs.updateMetadata('550e8400-e29b-41d4-a716-446655440000', req);
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 

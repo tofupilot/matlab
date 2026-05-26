@@ -26,7 +26,7 @@ classdef Versions < handle
 
         function response = get(obj, procedure_id, tag)
             %GET Get procedure version
-            %   Retrieve a single procedure version by its tag, including version metadata and configuration details.
+            %   Get a procedure version by tag, with its metadata and configuration.
             arguments
                 obj
                 procedure_id (1,1) string
@@ -38,7 +38,7 @@ classdef Versions < handle
 
         function response = delete(obj, procedure_id, tag)
             %DELETE Delete procedure version
-            %   Permanently delete a procedure version by its tag. This removes the version record and all associated configuration data and cannot be undone.
+            %   Delete a procedure version by tag. Irreversible.
             arguments
                 obj
                 procedure_id (1,1) string
@@ -50,7 +50,7 @@ classdef Versions < handle
 
         function response = create(obj, procedure_id, request)
             %CREATE Create procedure version
-            %   Create a new version for an existing test procedure. Versions let you track procedure changes over time and maintain a history of test configurations.
+            %   Create a version of a procedure. Versions snapshot procedure configuration over time.
             arguments
                 obj
                 procedure_id (1,1) string

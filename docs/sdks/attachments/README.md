@@ -9,7 +9,7 @@
 
 ## initialize
 
-Get a temporary pre-signed URL to upload a file. Returns the upload ID and URL. Upload the file to the URL with a PUT request, then call Finalize upload.
+Get a pre-signed URL to upload a file. Returns the upload ID and URL. PUT the file to the URL, then call Finalize upload.
 ### Example Usage
 
 ```matlab
@@ -40,9 +40,9 @@ response = sdk.Attachments.initialize(req);
 | Error 401 | 401 | application/json |
 | Error 403 | 403 | application/json |
 | Error 404 | 404 | application/json |
+| Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 502 | 502 | application/json |
-| Error 4XX | 4XX | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## finalize
@@ -69,7 +69,7 @@ response = sdk.Attachments.finalize('550e8400-e29b-41d4-a716-446655440000');
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 

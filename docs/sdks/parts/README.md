@@ -4,47 +4,15 @@
 
 ### Available Operations
 
-* [list](#list) - List and filter parts
 * [create](#create) - Create part
+* [list](#list) - List and filter parts
 * [get](#get) - Get part
-* [delete](#delete) - Delete part
 * [update](#update) - Update part
-
-## list
-
-Retrieve a paginated list of parts and components in your organization. Filter and search by part name, number, or revision number for inventory management.
-### Example Usage
-
-```matlab
-sdk = tofupilot.TofuPilot('your-api-key');
-
-response = sdk.Parts.list('limit', 20, 'cursor', 0, 'searchQuery', 'search-term');
-```
-
-### Parameters
-
-| Parameter | Type | Required | Description | Example |
-| --------- | ---- | -------- | ----------- | ------- |
-| `limit` | `double (optional)` | :heavy_minus_sign: | Maximum number of parts to return in a single page. | 20 |
-| `cursor` | `double (optional)` | :heavy_minus_sign: | N/A | 0 |
-| `searchQuery` | `string (optional)` | :heavy_minus_sign: | N/A | search-term |
-| `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
-| `sortBy` | `string` | :heavy_minus_sign: | Field to sort results by. | created_at |
-| `sortOrder` | `string` | :heavy_minus_sign: | Sort order direction. | desc |
-
-
-### Errors
-
-| Error Type | Status Code | Content Type |
-| ---------- | ----------- | ------------ |
-| Error 401 | 401 | application/json |
-| Error 500 | 500 | application/json |
-| Error 4XX | 4XX | application/json |
-| Error 5XX | 5XX | application/json |
+* [delete](#delete) - Delete part
 
 ## create
 
-Create a new part. Optionally create with a revision. Part numbers are matched case-insensitively (e.g., "PART-001" and "part-001" are considered the same).
+Create a part, optionally with an initial revision. Part numbers match case-insensitively ("PART-001" == "part-001").
 ### Example Usage
 
 ```matlab
@@ -77,13 +45,45 @@ response = sdk.Parts.create(req);
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 409 | 409 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
+| Error 5XX | 5XX | application/json |
+
+## list
+
+List parts. Filter and search by name, number, or revision number. Cursor-paginated.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+response = sdk.Parts.list('limit', 20, 'cursor', 0, 'searchQuery', 'search-term');
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `limit` | `double (optional)` | :heavy_minus_sign: | Maximum number of parts to return in a single page. | 20 |
+| `cursor` | `double (optional)` | :heavy_minus_sign: | N/A | 0 |
+| `searchQuery` | `string (optional)` | :heavy_minus_sign: | N/A | search-term |
+| `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `sortBy` | `string` | :heavy_minus_sign: | Field to sort results by. | created_at |
+| `sortOrder` | `string` | :heavy_minus_sign: | Sort order direction. | desc |
+
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
+| Error 401 | 401 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## get
 
-Retrieve a single part by its number, including all revisions, metadata, and linked units. Part numbers are matched case-insensitively.
+Get a part by number, with its revisions, metadata, and linked units. Numbers match case-insensitively.
 ### Example Usage
 
 ```matlab
@@ -105,41 +105,13 @@ response = sdk.Parts.get('PCB-V2.0');
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
-| Error 5XX | 5XX | application/json |
-
-## delete
-
-Permanently delete a part and all its revisions. This removes all associated data and cannot be undone.
-### Example Usage
-
-```matlab
-sdk = tofupilot.TofuPilot('your-api-key');
-
-response = sdk.Parts.delete('PCB-V2.0');
-```
-
-### Parameters
-
-| Parameter | Type | Required | Description | Example |
-| --------- | ---- | -------- | ----------- | ------- |
-| `number` | `string` | :heavy_check_mark: | Part number to delete. | PCB-V2.0 |
-
-
-### Errors
-
-| Error Type | Status Code | Content Type |
-| ---------- | ----------- | ------------ |
-| Error 401 | 401 | application/json |
-| Error 404 | 404 | application/json |
 | Error 500 | 500 | application/json |
-| Error 4XX | 4XX | application/json |
 | Error 5XX | 5XX | application/json |
 
 ## update
 
-Update a part's number or name. Identifies the part by its current number in the URL with case-insensitive matching.
+Update a part's number or name. Numbers match case-insensitively.
 ### Example Usage
 
 ```matlab
@@ -172,7 +144,35 @@ response = sdk.Parts.update('PCB-V2.0', req);
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
 | Error 409 | 409 | application/json |
-| Error 500 | 500 | application/json |
 | Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
+| Error 5XX | 5XX | application/json |
+
+## delete
+
+Delete a part and all its revisions. Irreversible.
+### Example Usage
+
+```matlab
+sdk = tofupilot.TofuPilot('your-api-key');
+
+response = sdk.Parts.delete('PCB-V2.0');
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description | Example |
+| --------- | ---- | -------- | ----------- | ------- |
+| `number` | `string` | :heavy_check_mark: | Part number to delete. | PCB-V2.0 |
+
+
+### Errors
+
+| Error Type | Status Code | Content Type |
+| ---------- | ----------- | ------------ |
+| Error 401 | 401 | application/json |
+| Error 404 | 404 | application/json |
+| Error 4XX | 4XX | application/json |
+| Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
 

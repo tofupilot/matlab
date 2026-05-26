@@ -1,6 +1,6 @@
-# TofuPilot MATLAB SDK
+# TofuPilot MATLAB Client
 
-MATLAB SDK for the [TofuPilot](https://tofupilot.com) REST API. Struct-based, with retries and request lifecycle hooks.
+MATLAB client for the [TofuPilot](https://tofupilot.com) REST API. Struct-based, with retries and request lifecycle hooks.
 
 ## Installation
 
@@ -31,8 +31,8 @@ req.procedure_id = '550e8400-e29b-41d4-a716-446655440000';
 req.serial_number = 'SN-001234';
 req.part_number = 'PCB-V1.2';
 req.outcome = 'PASS';
-req.started_at = '2026-05-11T10:00:00Z';
-req.ended_at = '2026-05-11T10:05:00Z';
+req.started_at = '2026-05-26T10:00:00Z';
+req.ended_at = '2026-05-26T10:05:00Z';
 
 run = sdk.Runs.create(req);
 fprintf('Created run: %s\n', run.id);
@@ -42,16 +42,17 @@ fprintf('Created run: %s\n', run.id);
 
 | Resource | Methods | Docs |
 | --- | --- | --- |
-| **Procedures** | list, create, get, delete, update | [docs/sdks/procedures](https://github.com/tofupilot/matlab/blob/main/docs/sdks/procedures/README.md) |
-| **Runs** | list, create, delete, get, update, createAttachment, updateMetadata | [docs/sdks/runs](https://github.com/tofupilot/matlab/blob/main/docs/sdks/runs/README.md) |
+| **Procedures** | create, list, get, delete, update | [docs/sdks/procedures](https://github.com/tofupilot/matlab/blob/main/docs/sdks/procedures/README.md) |
+| **Runs** | create, list, delete, get, update, createAttachment, updateMetadata | [docs/sdks/runs](https://github.com/tofupilot/matlab/blob/main/docs/sdks/runs/README.md) |
 | **Attachments** | initialize, finalize | [docs/sdks/attachments](https://github.com/tofupilot/matlab/blob/main/docs/sdks/attachments/README.md) |
-| **Units** | list, create, delete, get, update, addChild, removeChild, createAttachment, deleteAttachment | [docs/sdks/units](https://github.com/tofupilot/matlab/blob/main/docs/sdks/units/README.md) |
-| **Parts** | list, create, get, delete, update | [docs/sdks/parts](https://github.com/tofupilot/matlab/blob/main/docs/sdks/parts/README.md) |
+| **Units** | create, list, delete, get, update, addChild, removeChild, createAttachment, deleteAttachment | [docs/sdks/units](https://github.com/tofupilot/matlab/blob/main/docs/sdks/units/README.md) |
+| **Parts** | create, list, get, update, delete | [docs/sdks/parts](https://github.com/tofupilot/matlab/blob/main/docs/sdks/parts/README.md) |
 | **Batches** | get, delete, update, list, create | [docs/sdks/batches](https://github.com/tofupilot/matlab/blob/main/docs/sdks/batches/README.md) |
-| **Stations** | list, create, getCurrent, get, remove, update | [docs/sdks/stations](https://github.com/tofupilot/matlab/blob/main/docs/sdks/stations/README.md) |
-| **User** | list | [docs/sdks/user](https://github.com/tofupilot/matlab/blob/main/docs/sdks/user/README.md) |
+| **Stations** | create, list, getCurrent, get, update, remove | [docs/sdks/stations](https://github.com/tofupilot/matlab/blob/main/docs/sdks/stations/README.md) |
+| **Users** | list | [docs/sdks/users](https://github.com/tofupilot/matlab/blob/main/docs/sdks/users/README.md) |
+| **Imports** | createFromFiles | [docs/sdks/imports](https://github.com/tofupilot/matlab/blob/main/docs/sdks/imports/README.md) |
 | **Versions** | get, delete, create | [docs/sdks/versions](https://github.com/tofupilot/matlab/blob/main/docs/sdks/versions/README.md) |
-| **Revisions** | get, delete, update, create | [docs/sdks/revisions](https://github.com/tofupilot/matlab/blob/main/docs/sdks/revisions/README.md) |
+| **Revisions** | get, update, delete, create | [docs/sdks/revisions](https://github.com/tofupilot/matlab/blob/main/docs/sdks/revisions/README.md) |
 | **AttachmentHelpers** | upload, download | [docs/sdks/attachments](https://github.com/tofupilot/matlab/blob/main/docs/sdks/attachments/README.md) |
 
 ## File Upload
@@ -142,13 +143,6 @@ sdk = tofupilot.TofuPilot('your-api-key', ...
 
 - MATLAB R2019b or later
 - No additional toolboxes required
-
-## Documentation
-
-- [Getting Started](https://tofupilot.com/docs/getting-started-with-tofupilot)
-- [MATLAB SDK Guide](https://tofupilot.com/docs/sdk/matlab)
-- [API Reference](https://tofupilot.com/docs/api/rest-api)
-- [Changelog](https://tofupilot.com/changelog)
 
 ## License
 

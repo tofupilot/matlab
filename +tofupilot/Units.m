@@ -2,8 +2,8 @@ classdef Units < handle
     %UNITS Units resource operations.
     %
     %   Methods:
-    %     list - List and filter units
     %     create - Create unit
+    %     list - List and filter units
     %     delete - Delete units
     %     get - Get unit
     %     update - Update unit
@@ -30,9 +30,19 @@ classdef Units < handle
             obj.Client = client;
         end
 
+        function response = create(obj, request)
+            %CREATE Create unit
+            %   Create a unit with a serial number and link it to a part revision.
+            arguments
+                obj
+                request struct = struct()
+            end
+            response = obj.Client.post('/v2/units', request);
+        end
+
         function response = list(obj, opts)
             %LIST List and filter units
-            %   Retrieve a paginated list of units with filtering by serial number, part number, and batch. Uses cursor-based pagination for efficient large dataset traversal.
+            %   List units with filtering by serial number, part number, and batch. Cursor-paginated.
             arguments
                 obj
                 opts.searchQuery (1,1) string = ""
@@ -140,19 +150,9 @@ classdef Units < handle
             response = obj.Client.get('/v2/units', queryParams);
         end
 
-        function response = create(obj, request)
-            %CREATE Create unit
-            %   Create a new unit with a serial number and link it to a part revision. Units represent individual hardware items tracked for manufacturing traceability.
-            arguments
-                obj
-                request struct = struct()
-            end
-            response = obj.Client.post('/v2/units', request);
-        end
-
         function response = delete(obj, opts)
             %DELETE Delete units
-            %   Permanently delete units by serial number. This action will remove all nested elements and relationships associated with the units.
+            %   Delete units by serial number. Sub-units are unlinked, not deleted. Irreversible.
             arguments
                 obj
                 opts.serialNumbers  = []
@@ -166,7 +166,7 @@ classdef Units < handle
 
         function response = get(obj, serial_number)
             %GET Get unit
-            %   Retrieve a single unit by its serial number. Returns comprehensive unit data including part information, parent/child relationships, and test run history.
+            %   Get a unit by serial number, with its part, parent/child links, and run history.
             arguments
                 obj
                 serial_number (1,1) string
@@ -177,7 +177,7 @@ classdef Units < handle
 
         function response = update(obj, serial_number, request)
             %UPDATE Update unit
-            %   Update unit properties including serial number, part revision, batch assignment, and file attachments with case-insensitive matching.
+            %   Update a unit: serial number, part revision, batch, and file attachments.
             arguments
                 obj
                 serial_number (1,1) string
@@ -189,7 +189,7 @@ classdef Units < handle
 
         function response = addChild(obj, serial_number, request)
             %ADDCHILD Add sub-unit
-            %   Add a sub-unit to a parent unit to track component assemblies and multi-level hardware traceability.
+            %   Link a sub-unit to a parent unit to track assemblies.
             arguments
                 obj
                 serial_number (1,1) string
@@ -201,7 +201,7 @@ classdef Units < handle
 
         function response = removeChild(obj, serial_number, opts)
             %REMOVECHILD Remove sub-unit
-            %   Remove a sub-unit relationship from a parent unit by serial number. Only unlinks the parent-child relationship; neither unit is deleted from the system.
+            %   Unlink a sub-unit from its parent. Neither unit is deleted.
             arguments
                 obj
                 serial_number (1,1) string
@@ -217,7 +217,7 @@ classdef Units < handle
 
         function response = createAttachment(obj, serial_number, request)
             %CREATEATTACHMENT Attach file to unit
-            %   Create an attachment linked to a unit and get a temporary pre-signed URL. Upload the file to the URL with a PUT request to complete the attachment.
+            %   Attach a file to a unit. Returns an upload ID and pre-signed URL; PUT the file to the URL, then call Finalize upload to commit.
             arguments
                 obj
                 serial_number (1,1) string
@@ -229,7 +229,7 @@ classdef Units < handle
 
         function response = deleteAttachment(obj, serial_number, opts)
             %DELETEATTACHMENT Delete unit attachments
-            %   Delete attachments from a unit by their IDs. Removes the files from storage and unlinks them from the unit.
+            %   Delete attachments from a unit by ID. Removes the files from storage and unlinks them.
             arguments
                 obj
                 serial_number (1,1) string

@@ -2,12 +2,12 @@ classdef Stations < handle
     %STATIONS Stations resource operations.
     %
     %   Methods:
-    %     list - List and filter stations
     %     create - Create station
+    %     list - List and filter stations
     %     getCurrent - Get current station
     %     get - Get station
-    %     remove - Remove station
     %     update - Update station
+    %     remove - Remove station
     %
     %   See also tofupilot.TofuPilot
 
@@ -27,9 +27,19 @@ classdef Stations < handle
             obj.Client = client;
         end
 
+        function response = create(obj, request)
+            %CREATE Create station
+            %   Create a station to register production equipment and link it to procedures.
+            arguments
+                obj
+                request struct = struct()
+            end
+            response = obj.Client.post('/v2/stations', request);
+        end
+
         function response = list(obj, opts)
             %LIST List and filter stations
-            %   Retrieve a paginated list of test stations in your organization. Search by station name and filter by status for station fleet management.
+            %   List stations. Search by name and filter by status. Cursor-paginated.
             arguments
                 obj
                 opts.limit (1,1) double = 50
@@ -53,25 +63,15 @@ classdef Stations < handle
             response = obj.Client.get('/v2/stations', queryParams);
         end
 
-        function response = create(obj, request)
-            %CREATE Create station
-            %   Create a new test station in TofuPilot to register production equipment and link it to test procedures.
-            arguments
-                obj
-                request struct = struct()
-            end
-            response = obj.Client.post('/v2/stations', request);
-        end
-
         function response = getCurrent(obj)
             %GETCURRENT Get current station
-            %   Retrieve detailed information about the currently authenticated station including linked procedures and connection status.
+            %   Get the station the request is authenticated as, with its linked procedures and connection status.
             response = obj.Client.get('/v2/stations/current');
         end
 
         function response = get(obj, id)
             %GET Get station
-            %   Retrieve detailed station information including linked procedures, connection status, and recent activity.
+            %   Get a station by ID, with its linked procedures, connection status, and recent activity.
             arguments
                 obj
                 id (1,1) string
@@ -80,20 +80,9 @@ classdef Stations < handle
             response = obj.Client.get(path);
         end
 
-        function response = remove(obj, id)
-            %REMOVE Remove station
-            %   Remove a test station. Deletes permanently if unused, or archives with preserved historical data if runs exist.
-            arguments
-                obj
-                id (1,1) string
-            end
-            path = sprintf('/v2/stations/%s', id);
-            response = obj.Client.delete(path);
-        end
-
         function response = update(obj, id, request)
             %UPDATE Update station
-            %   Update station name and/or image. The station ID is specified in the URL path. To remove an image, pass an empty string for image_id.
+            %   Update a station name and/or image. Pass an empty string for image_id to remove the image.
             arguments
                 obj
                 id (1,1) string
@@ -101,6 +90,17 @@ classdef Stations < handle
             end
             path = sprintf('/v2/stations/%s', id);
             response = obj.Client.patch(path, request);
+        end
+
+        function response = remove(obj, id)
+            %REMOVE Remove station
+            %   Remove a station. Deleted if unused; archived (history preserved) if runs reference it.
+            arguments
+                obj
+                id (1,1) string
+            end
+            path = sprintf('/v2/stations/%s', id);
+            response = obj.Client.delete(path);
         end
     end
 end
