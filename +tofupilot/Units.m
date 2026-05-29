@@ -68,7 +68,7 @@ classdef Units < handle
                 opts.cursor  = []
                 opts.sortBy (1,1) string = "created_at"
                 opts.sortOrder (1,1) string = "desc"
-                opts.metadata (1,1) string = ""
+                opts.metadata  = []
                 opts.includeMetadata (1,1) logical = false
             end
             queryParams = struct();
@@ -142,7 +142,7 @@ classdef Units < handle
                 queryParams.sort_order = opts.sortOrder;
             end
             if ~isempty(opts.metadata)
-                queryParams.metadata = opts.metadata;
+                queryParams.metadata = jsonencode(opts.metadata);
             end
             if ~isempty(opts.includeMetadata)
                 queryParams.include_metadata = opts.includeMetadata;
