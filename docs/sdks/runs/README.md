@@ -102,6 +102,8 @@ response = sdk.Runs.list('searchQuery', 'search-term', 'ids', {'value-1', 'value
 | `outcomes` | `cell array of string` | :heavy_minus_sign: | N/A | {'PASS', 'FAIL'} |
 | `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `procedureVersions` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `deploymentIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `environments` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
 | `serialNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `samples` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
 | `partNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |

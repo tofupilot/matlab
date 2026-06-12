@@ -31,8 +31,8 @@ req.procedure_id = '550e8400-e29b-41d4-a716-446655440000';
 req.serial_number = 'SN-001234';
 req.part_number = 'PCB-V1.2';
 req.outcome = 'PASS';
-req.started_at = '2026-05-29T10:00:00Z';
-req.ended_at = '2026-05-29T10:05:00Z';
+req.started_at = '2026-06-11T10:00:00Z';
+req.ended_at = '2026-06-11T10:05:00Z';
 
 run = sdk.Runs.create(req);
 fprintf('Created run: %s\n', run.id);
@@ -51,6 +51,10 @@ fprintf('Created run: %s\n', run.id);
 | **Stations** | create, list, getCurrent, get, update, remove | [docs/sdks/stations](https://github.com/tofupilot/matlab/blob/main/docs/sdks/stations/README.md) |
 | **Users** | list | [docs/sdks/users](https://github.com/tofupilot/matlab/blob/main/docs/sdks/users/README.md) |
 | **Imports** | structured, tabular | [docs/sdks/imports](https://github.com/tofupilot/matlab/blob/main/docs/sdks/imports/README.md) |
+| **Logs** | list, get | [docs/sdks/logs](https://github.com/tofupilot/matlab/blob/main/docs/sdks/logs/README.md) |
+| **Phases** | list, get | [docs/sdks/phases](https://github.com/tofupilot/matlab/blob/main/docs/sdks/phases/README.md) |
+| **Measurements** | list, get | [docs/sdks/measurements](https://github.com/tofupilot/matlab/blob/main/docs/sdks/measurements/README.md) |
+| **Deployments** | list, get | [docs/sdks/deployments](https://github.com/tofupilot/matlab/blob/main/docs/sdks/deployments/README.md) |
 | **Versions** | get, delete, create | [docs/sdks/versions](https://github.com/tofupilot/matlab/blob/main/docs/sdks/versions/README.md) |
 | **Revisions** | get, update, delete, create | [docs/sdks/revisions](https://github.com/tofupilot/matlab/blob/main/docs/sdks/revisions/README.md) |
 | **AttachmentHelpers** | upload, download | [docs/sdks/attachments](https://github.com/tofupilot/matlab/blob/main/docs/sdks/attachments/README.md) |

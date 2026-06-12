@@ -1,5 +1,5 @@
 % TOFUPILOT — TofuPilot API v2 client for MATLAB
-% Version 2.6.3
+% Version 2.7.1
 %
 % Classes:
 %   TofuPilot - Main SDK client. Entry point for all API operations.
@@ -14,6 +14,10 @@
 %   Stations - Stations operations.
 %   Users - Users operations.
 %   Imports - Imports operations.
+%   Logs - Logs operations.
+%   Phases - Phases operations.
+%   Measurements - Measurements operations.
+%   Deployments - Deployments operations.
 %   AttachmentHelpers - Upload and download file attachments.
 %
 % Getting started:
