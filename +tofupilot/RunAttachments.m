@@ -7,16 +7,26 @@ classdef RunAttachments < handle
     %
     %   Example:
     %     sdk = tofupilot.TofuPilot('your-api-key');
-    %     id = sdk.Runs.Attachments.upload(runId, 'report.pdf');
-    %     sdk.Runs.Attachments.download(downloadUrl, 'local-report.pdf');
+    %     runAtt = tofupilot.RunAttachments(sdk.Runs, sdk.Attachments);
+    %     id = runAtt.upload(runId, 'report.pdf');
+    %     runAtt.download(downloadUrl, 'local-report.pdf');
 
     properties (Access = private)
-        Runs  % tofupilot.Runs
+        Runs         % tofupilot.Runs
+        Attachments  % tofupilot.Attachments, needed to finalize uploads
     end
 
     methods
-        function obj = RunAttachments(runs)
+        function obj = RunAttachments(runs, attachments)
+            %RUNATTACHMENTS Construct with tofupilot.RunAttachments(sdk.Runs, sdk.Attachments).
+            %   The attachments resource is required: it finalizes uploads,
+            %   which records their size and content type.
+            arguments
+                runs
+                attachments
+            end
             obj.Runs = runs;
+            obj.Attachments = attachments;
         end
 
         function attachmentId = upload(obj, runId, filePath)
@@ -36,6 +46,18 @@ classdef RunAttachments < handle
 
             result = obj.Runs.createAttachment(char(runId), struct('name', char(fileName)));
             tofupilot.RunAttachments.putFile(filePath, string(result.upload_url), ext);
+            % The PUT stores the bytes but records no metadata; finalize
+            % stamps size and content type from the stored object.
+            % Best-effort: the attachment is already stored and linked, so
+            % a metadata failure must not fail the upload — the caller
+            % would retry and duplicate it.
+            try
+                obj.Attachments.finalize(char(string(result.id)));
+            catch ex
+                warning('tofupilot:FinalizeFailed', ...
+                    'Attachment %s uploaded but not finalized (size will read 0): %s', ...
+                    char(string(result.id)), ex.message);
+            end
             attachmentId = string(result.id);
         end
 

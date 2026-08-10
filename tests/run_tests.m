@@ -885,13 +885,16 @@ function results = test_attachments(sdk)
         'ended_at', now_str));
     runId = string(runResp.id);
 
-    % attach to run helper
+    % attach to run helper — constructed with the attachments API so
+    % uploads are finalized (sdk.Runs never exposed an Attachments property)
+    runAtt = tofupilot.RunAttachments(sdk.Runs, sdk.Attachments);
+    unitAtt = tofupilot.UnitAttachments(sdk.Units, sdk.Attachments);
     tmpFile = fullfile(tempdir, 'tofupilot_test_attach.txt');
     fid = fopen(tmpFile, 'w');
     fprintf(fid, 'MATLAB SDK attach test');
     fclose(fid);
     try
-        attachId = sdk.Runs.Attachments.upload(runId, tmpFile);
+        attachId = runAtt.upload(runId, tmpFile);
         assert(strlength(attachId) == 36, 'Expected UUID');
         results{end+1} = pass('attach_to_run');
     catch ex
@@ -901,7 +904,7 @@ function results = test_attachments(sdk)
 
     % attach nonexistent file
     try
-        sdk.Runs.Attachments.upload(runId, '/nonexistent/file.txt');
+        runAtt.upload(runId, '/nonexistent/file.txt');
         results{end+1} = fail('attach_nonexistent', 'Expected error');
     catch ex
         if contains(ex.message, 'File not found') || contains(ex.identifier, 'FileNotFound')
@@ -913,7 +916,7 @@ function results = test_attachments(sdk)
 
     % download empty URL
     try
-        sdk.Runs.Attachments.download('', '/tmp/test.txt');
+        runAtt.download('', '/tmp/test.txt');
         results{end+1} = fail('download_empty_url', 'Expected error');
     catch ex
         if contains(ex.message, 'empty') || contains(ex.identifier, 'InvalidUrl')
@@ -933,8 +936,8 @@ function results = test_attachments(sdk)
     tmpFile2 = fullfile(tempdir, 'tofupilot_test_delatt.txt');
     fid = fopen(tmpFile2, 'w'); fprintf(fid, 'file to delete'); fclose(fid);
     try
-        attId = sdk.Units.Attachments.upload(char(unitSn), tmpFile2);
-        resp = sdk.Units.Attachments.delete(char(unitSn), {{char(attId)}});
+        attId = unitAtt.upload(char(unitSn), tmpFile2);
+        resp = unitAtt.delete(char(unitSn), {{char(attId)}});
         assert(any(strcmp(resp.ids, char(attId))), 'Deleted ID not in response');
         fetched = sdk.Units.get(char(unitSn));
         found = false;

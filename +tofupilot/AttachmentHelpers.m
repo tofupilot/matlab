@@ -8,17 +8,23 @@ classdef AttachmentHelpers
     %
     %   Example:
     %     sdk = tofupilot.TofuPilot('your-api-key');
-    %     tofupilot.AttachmentHelpers.attachToRun(sdk.Runs, runId, 'report.pdf');
-    %     tofupilot.AttachmentHelpers.attachToUnit(sdk.Units, 'SN-0001', 'cal.pdf');
+    %     tofupilot.AttachmentHelpers.attachToRun(sdk, runId, 'report.pdf');
+    %     tofupilot.AttachmentHelpers.attachToUnit(sdk, 'SN-0001', 'cal.pdf');
     %
     %   See also tofupilot.Runs, tofupilot.Units, tofupilot.TofuPilot
 
     methods (Static)
-        function attachmentId = attachToRun(runs, runId, filePath)
+        function attachmentId = attachToRun(sdkOrRuns, runId, filePath)
             %ATTACHTORUN Attach a file to a run. Returns the attachment ID.
-            %   id = tofupilot.AttachmentHelpers.attachToRun(sdk.Runs, runId, filePath)
+            %   id = tofupilot.AttachmentHelpers.attachToRun(sdk, runId, filePath)
+            %
+            %   Pass the root sdk (tofupilot.TofuPilot). The PUT stores the
+            %   bytes but records no metadata; the finalize call afterwards
+            %   stamps size and content type, and needs sdk.Attachments.
+            %   Passing sdk.Runs (the pre-2.9 signature) still uploads but
+            %   cannot finalize, so the attachment shows size 0.
             arguments
-                runs
+                sdkOrRuns
                 runId (1,1) string
                 filePath (1,1) string
             end
@@ -30,16 +36,32 @@ classdef AttachmentHelpers
             [~, name, ext] = fileparts(filePath);
             fileName = name + ext;
 
+            [runs, attachments] = tofupilot.AttachmentHelpers.resolveApis(sdkOrRuns, 'Runs');
             result = runs.createAttachment(char(runId), struct('name', char(fileName)));
             tofupilot.AttachmentHelpers.putFile(filePath, string(result.upload_url), ext);
+            % Best-effort: the attachment is already stored and linked, so
+            % a metadata failure must not fail the upload — the caller
+            % would retry and duplicate it.
+            if ~isempty(attachments)
+                try
+                    attachments.finalize(char(string(result.id)));
+                catch ex
+                    warning('tofupilot:FinalizeFailed', ...
+                        'Attachment %s uploaded but not finalized (size will read 0): %s', ...
+                        char(string(result.id)), ex.message);
+                end
+            end
             attachmentId = string(result.id);
         end
 
-        function attachmentId = attachToUnit(units, serialNumber, filePath)
+        function attachmentId = attachToUnit(sdkOrUnits, serialNumber, filePath)
             %ATTACHTOUNIT Attach a file to a unit. Returns the attachment ID.
-            %   id = tofupilot.AttachmentHelpers.attachToUnit(sdk.Units, serialNumber, filePath)
+            %   id = tofupilot.AttachmentHelpers.attachToUnit(sdk, serialNumber, filePath)
+            %
+            %   Pass the root sdk (tofupilot.TofuPilot); see attachToRun for
+            %   why the finalize step needs it.
             arguments
-                units
+                sdkOrUnits
                 serialNumber (1,1) string
                 filePath (1,1) string
             end
@@ -51,9 +73,41 @@ classdef AttachmentHelpers
             [~, name, ext] = fileparts(filePath);
             fileName = name + ext;
 
+            [units, attachments] = tofupilot.AttachmentHelpers.resolveApis(sdkOrUnits, 'Units');
             result = units.createAttachment(char(serialNumber), struct('name', char(fileName)));
             tofupilot.AttachmentHelpers.putFile(filePath, string(result.upload_url), ext);
+            % Best-effort: the attachment is already stored and linked, so
+            % a metadata failure must not fail the upload — the caller
+            % would retry and duplicate it.
+            if ~isempty(attachments)
+                try
+                    attachments.finalize(char(string(result.id)));
+                catch ex
+                    warning('tofupilot:FinalizeFailed', ...
+                        'Attachment %s uploaded but not finalized (size will read 0): %s', ...
+                        char(string(result.id)), ex.message);
+                end
+            end
             attachmentId = string(result.id);
+        end
+
+        function [resource, attachments] = resolveApis(sdkOrResource, resourceName)
+            %RESOLVEAPIS Accept the root sdk or a bare resource object.
+            %   With the root sdk both the resource and the attachments API
+            %   are available, so uploads can finalize. A bare resource
+            %   (pre-2.9 call style) cannot reach the attachments API — warn
+            %   so the size-0 result is traceable.
+            if isa(sdkOrResource, 'tofupilot.TofuPilot')
+                resource = sdkOrResource.(resourceName);
+                attachments = sdkOrResource.Attachments;
+            else
+                resource = sdkOrResource;
+                attachments = [];
+                warning('tofupilot:NoFinalize', ...
+                    ['Pass the root sdk object so the upload can be ' ...
+                     'finalized; without it the attachment is stored but ' ...
+                     'its size and content type are not recorded.']);
+            end
         end
 
         function outputPath = download(downloadUrl, destinationPath)

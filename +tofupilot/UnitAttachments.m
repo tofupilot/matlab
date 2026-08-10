@@ -8,17 +8,27 @@ classdef UnitAttachments < handle
     %
     %   Example:
     %     sdk = tofupilot.TofuPilot('your-api-key');
-    %     id = sdk.Units.Attachments.upload('SN-0001', 'calibration.pdf');
-    %     sdk.Units.Attachments.download(downloadUrl, 'local-copy.pdf');
-    %     sdk.Units.Attachments.delete('SN-0001', {id});
+    %     unitAtt = tofupilot.UnitAttachments(sdk.Units, sdk.Attachments);
+    %     id = unitAtt.upload('SN-0001', 'calibration.pdf');
+    %     unitAtt.download(downloadUrl, 'local-copy.pdf');
+    %     unitAtt.delete('SN-0001', {id});
 
     properties (Access = private)
-        Units  % tofupilot.Units
+        Units        % tofupilot.Units
+        Attachments  % tofupilot.Attachments, needed to finalize uploads
     end
 
     methods
-        function obj = UnitAttachments(units)
+        function obj = UnitAttachments(units, attachments)
+            %UNITATTACHMENTS Construct with tofupilot.UnitAttachments(sdk.Units, sdk.Attachments).
+            %   The attachments resource is required: it finalizes uploads,
+            %   which records their size and content type.
+            arguments
+                units
+                attachments
+            end
             obj.Units = units;
+            obj.Attachments = attachments;
         end
 
         function attachmentId = upload(obj, serialNumber, filePath)
@@ -38,6 +48,18 @@ classdef UnitAttachments < handle
 
             result = obj.Units.createAttachment(char(serialNumber), struct('name', char(fileName)));
             tofupilot.UnitAttachments.putFile(filePath, string(result.upload_url), ext);
+            % The PUT stores the bytes but records no metadata; finalize
+            % stamps size and content type from the stored object.
+            % Best-effort: the attachment is already stored and linked, so
+            % a metadata failure must not fail the upload — the caller
+            % would retry and duplicate it.
+            try
+                obj.Attachments.finalize(char(string(result.id)));
+            catch ex
+                warning('tofupilot:FinalizeFailed', ...
+                    'Attachment %s uploaded but not finalized (size will read 0): %s', ...
+                    char(string(result.id)), ex.message);
+            end
             attachmentId = string(result.id);
         end
 
