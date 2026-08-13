@@ -65,13 +65,13 @@ classdef Stations < handle
 
         function response = getCurrent(obj)
             %GETCURRENT Get current station
-            %   Get the station the request is authenticated as, with its linked procedures and connection status.
+            %   Get the station the request is authenticated as, with its linked procedures.
             response = obj.Client.get('/v2/stations/current');
         end
 
         function response = get(obj, id)
             %GET Get station
-            %   Get a station by ID, with its linked procedures, connection status, and recent activity.
+            %   Get a station by ID, with its linked procedures and recent activity.
             arguments
                 obj
                 id (1,1) string

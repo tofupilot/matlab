@@ -44,7 +44,6 @@ response = sdk.Stations.create(req);
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 403 | 403 | application/json |
-| Error 409 | 409 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
@@ -81,7 +80,7 @@ response = sdk.Stations.list('limit', 20, 'cursor', 0, 'searchQuery', 'search-te
 
 ## getCurrent
 
-Get the station the request is authenticated as, with its linked procedures and connection status.
+Get the station the request is authenticated as, with its linked procedures.
 ### Example Usage
 
 ```matlab
@@ -107,7 +106,7 @@ No parameters required.
 
 ## get
 
-Get a station by ID, with its linked procedures, connection status, and recent activity.
+Get a station by ID, with its linked procedures and recent activity.
 ### Example Usage
 
 ```matlab
@@ -169,7 +168,6 @@ response = sdk.Stations.update('550e8400-e29b-41d4-a716-446655440000', req);
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
-| Error 409 | 409 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
