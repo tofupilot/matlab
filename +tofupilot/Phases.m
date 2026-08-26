@@ -42,6 +42,7 @@ classdef Phases < handle
                 opts.procedureVersions  = []
                 opts.environments  = []
                 opts.operatedByIds  = []
+                opts.operatedByNames  = []
                 opts.createdByStationIds  = []
                 opts.createdByUserIds  = []
                 opts.serialNumbers  = []
@@ -96,6 +97,9 @@ classdef Phases < handle
             end
             if ~isempty(opts.operatedByIds)
                 queryParams.operated_by_ids = opts.operatedByIds;
+            end
+            if ~isempty(opts.operatedByNames)
+                queryParams.operated_by_names = opts.operatedByNames;
             end
             if ~isempty(opts.createdByStationIds)
                 queryParams.created_by_station_ids = opts.createdByStationIds;

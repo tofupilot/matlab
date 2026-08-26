@@ -36,6 +36,7 @@ response = sdk.Phases.list('procedureId', '550e8400-e29b-41d4-a716-446655440000'
 | `procedureVersions` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `environments` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
 | `operatedByIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `operatedByNames` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `createdByStationIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `createdByUserIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `serialNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |

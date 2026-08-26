@@ -66,6 +66,7 @@ classdef Runs < handle
                 opts.createdByUserIds  = []
                 opts.createdByStationIds  = []
                 opts.operatedByIds  = []
+                opts.operatedByNames  = []
                 opts.limit (1,1) double = 50
                 opts.cursor  = []
                 opts.sortBy (1,1) string = "started_at"
@@ -142,6 +143,9 @@ classdef Runs < handle
             end
             if ~isempty(opts.operatedByIds)
                 queryParams.operated_by_ids = opts.operatedByIds;
+            end
+            if ~isempty(opts.operatedByNames)
+                queryParams.operated_by_names = opts.operatedByNames;
             end
             if ~isempty(opts.limit)
                 queryParams.limit = opts.limit;

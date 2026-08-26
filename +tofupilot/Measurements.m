@@ -44,6 +44,7 @@ classdef Measurements < handle
                 opts.revisionNumbers  = []
                 opts.batchNumbers  = []
                 opts.operatedByIds  = []
+                opts.operatedByNames  = []
                 opts.createdByStationIds  = []
                 opts.createdByUserIds  = []
                 opts.startedAfter (1,1) string = ""
@@ -108,6 +109,9 @@ classdef Measurements < handle
             end
             if ~isempty(opts.operatedByIds)
                 queryParams.operated_by_ids = opts.operatedByIds;
+            end
+            if ~isempty(opts.operatedByNames)
+                queryParams.operated_by_names = opts.operatedByNames;
             end
             if ~isempty(opts.createdByStationIds)
                 queryParams.created_by_station_ids = opts.createdByStationIds;

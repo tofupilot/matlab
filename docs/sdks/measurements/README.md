@@ -38,6 +38,7 @@ response = sdk.Measurements.list('procedureId', '550e8400-e29b-41d4-a716-4466554
 | `revisionNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `batchNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `operatedByIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `operatedByNames` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `createdByStationIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `createdByUserIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `startedAfter` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
