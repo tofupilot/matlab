@@ -48,6 +48,7 @@ sdk = tofupilot.TofuPilot('your-api-key');
 
 req.number = 'PCB-V2.0';
 req.image_id = 'example-value';
+req.metadata = struct();
 
 response = sdk.Parts.Revisions.update('PCB-V1.2', 'REV-A', req);
 ```
@@ -66,6 +67,7 @@ response = sdk.Parts.Revisions.update('PCB-V1.2', 'REV-A', req);
 | ----- | ---- | -------- | ----------- | ------- |
 | `number` | `string (optional)` | :heavy_minus_sign: | New revision number to set. | PCB-V2.0 |
 | `image_id` | `string (optional)` | :heavy_minus_sign: | Upload ID for the revision image, or empty string to remove image | example-value |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the revision. Plain object of key/value pairs. PATCH semantics: keys not present here are preserved. Pass `null` as a value to delete a key. | struct() |
 
 ### Errors
 
@@ -116,6 +118,7 @@ Create a revision of a part. Revision numbers match case-insensitively ("REV-A" 
 sdk = tofupilot.TofuPilot('your-api-key');
 
 req.number = 'PCB-V2.0';
+req.metadata = struct();
 
 response = sdk.Parts.Revisions.create('PCB-V1.2', req);
 ```
@@ -132,6 +135,7 @@ response = sdk.Parts.Revisions.create('PCB-V1.2', req);
 | Field | Type | Required | Description | Example |
 | ----- | ---- | -------- | ----------- | ------- |
 | `number` | `string` | :heavy_check_mark: | Revision number (e.g., version number or code). | PCB-V2.0 |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to attach to the revision (max 50 keys per revision). Plain object of key/value pairs; values can be string, number, or boolean. Type is detected from the value. | struct() |
 
 ### Errors
 

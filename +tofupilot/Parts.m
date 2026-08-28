@@ -48,6 +48,8 @@ classdef Parts < handle
                 opts.procedureIds  = []
                 opts.sortBy (1,1) string = "created_at"
                 opts.sortOrder (1,1) string = "desc"
+                opts.metadata  = []
+                opts.includeMetadata (1,1) logical = false
             end
             queryParams = struct();
             if ~isempty(opts.limit)
@@ -67,6 +69,12 @@ classdef Parts < handle
             end
             if ~isempty(opts.sortOrder)
                 queryParams.sort_order = opts.sortOrder;
+            end
+            if ~isempty(opts.metadata)
+                queryParams.metadata = jsonencode(opts.metadata);
+            end
+            if ~isempty(opts.includeMetadata)
+                queryParams.include_metadata = opts.includeMetadata;
             end
             response = obj.Client.get('/v2/parts', queryParams);
         end

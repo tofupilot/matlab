@@ -21,6 +21,7 @@ sdk = tofupilot.TofuPilot('your-api-key');
 req.number = 'PCB-V2.0';
 req.name = 'Example Name';
 req.revision_number = 'REV-A';
+req.metadata = struct();
 
 response = sdk.Parts.create(req);
 ```
@@ -38,6 +39,7 @@ response = sdk.Parts.create(req);
 | `number` | `string` | :heavy_check_mark: | Unique identifier number for the part. | PCB-V2.0 |
 | `name` | `string (optional)` | :heavy_minus_sign: | Human-readable name for the part. If not provided, a default name will be used. | Example Name |
 | `revision_number` | `string (optional)` | :heavy_minus_sign: | Revision identifier for the part version. If not provided, default revision identifier will be used. | REV-A |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to attach to the part (max 50 keys per part). Plain object of key/value pairs; values can be string, number, or boolean. Type is detected from the value. | struct() |
 
 ### Errors
 
@@ -70,6 +72,8 @@ response = sdk.Parts.list('limit', 20, 'cursor', 0, 'searchQuery', 'search-term'
 | `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `sortBy` | `string` | :heavy_minus_sign: | Field to sort results by. | created_at |
 | `sortOrder` | `string` | :heavy_minus_sign: | Sort order direction. | desc |
+| `metadata` | `string` | :heavy_minus_sign: | Filter parts by custom metadata. Supports up to 5 keys per request. Per-key operators: string `{in: [...]}`/`{contains: "..."}`, number `{gte, lte, gt, lt, eq}`, bool `{eq: true\|false}`. | struct() |
+| `includeMetadata` | `logical (optional)` | :heavy_minus_sign: | When true, includes the custom metadata object on each part in the response. Defaults to false to keep payloads small. | false |
 
 
 ### Errors
@@ -119,6 +123,7 @@ sdk = tofupilot.TofuPilot('your-api-key');
 
 req.new_number = 'PCB-V3.0';
 req.name = 'Example Name';
+req.metadata = struct();
 
 response = sdk.Parts.update('PCB-V2.0', req);
 ```
@@ -136,6 +141,7 @@ response = sdk.Parts.update('PCB-V2.0', req);
 | ----- | ---- | -------- | ----------- | ------- |
 | `new_number` | `string (optional)` | :heavy_minus_sign: | New unique identifier number for the part. | PCB-V3.0 |
 | `name` | `string (optional)` | :heavy_minus_sign: | New human-readable name for the part. | Example Name |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the part. Plain object of key/value pairs. PATCH semantics: keys not present here are preserved. Pass `null` as a value to delete a key. | struct() |
 
 ### Errors
 

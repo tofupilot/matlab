@@ -21,6 +21,7 @@ sdk = tofupilot.TofuPilot('your-api-key');
 
 req.name = 'Example Name';
 req.procedure_id = '550e8400-e29b-41d4-a716-446655440000';
+req.metadata = struct();
 
 response = sdk.Stations.create(req);
 ```
@@ -37,6 +38,7 @@ response = sdk.Stations.create(req);
 | ----- | ---- | -------- | ----------- | ------- |
 | `name` | `string` | :heavy_check_mark: | Name of the station | Example Name |
 | `procedure_id` | `string (optional)` | :heavy_minus_sign: | Optional procedure ID to link the station to | 550e8400-e29b-41d4-a716-446655440000 |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to attach to the station (max 50 keys per station). Plain object of key/value pairs; values can be string, number, or boolean. Type is detected from the value. Use it for descriptive fields such as location or asset tag — not for procedure configuration, which belongs to station config. | struct() |
 
 ### Errors
 
@@ -67,6 +69,8 @@ response = sdk.Stations.list('limit', 20, 'cursor', 0, 'searchQuery', 'search-te
 | `cursor` | `double (optional)` | :heavy_minus_sign: | N/A | 0 |
 | `searchQuery` | `string (optional)` | :heavy_minus_sign: | N/A | search-term |
 | `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `metadata` | `string` | :heavy_minus_sign: | Filter stations by custom metadata. Supports up to 5 keys per request. Per-key operators: string `{in: [...]}`/`{contains: "..."}`, number `{gte, lte, gt, lt, eq}`, bool `{eq: true\|false}`. | struct() |
+| `includeMetadata` | `logical (optional)` | :heavy_minus_sign: | When true, includes the custom metadata object on each station in the response. Defaults to false to keep payloads small. | false |
 
 
 ### Errors
@@ -143,6 +147,7 @@ sdk = tofupilot.TofuPilot('your-api-key');
 req.name = 'Example Name';
 req.image_id = 'example-value';
 req.team_id = 'example-value';
+req.metadata = struct();
 
 response = sdk.Stations.update('550e8400-e29b-41d4-a716-446655440000', req);
 ```
@@ -161,6 +166,7 @@ response = sdk.Stations.update('550e8400-e29b-41d4-a716-446655440000', req);
 | `name` | `string (optional)` | :heavy_minus_sign: | New name for the station | Example Name |
 | `image_id` | `string (optional)` | :heavy_minus_sign: | Upload ID for the station image, or empty string to remove image | example-value |
 | `team_id` | `string (optional)` | :heavy_minus_sign: | Team ID to assign this station to, or null to unassign | example-value |
+| `metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the station. Plain object of key/value pairs. PATCH semantics: keys not present here are preserved. Pass `null` as a value to delete a key. | struct() |
 
 ### Errors
 

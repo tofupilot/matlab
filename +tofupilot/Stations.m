@@ -46,6 +46,8 @@ classdef Stations < handle
                 opts.cursor  = []
                 opts.searchQuery (1,1) string = ""
                 opts.procedureIds  = []
+                opts.metadata  = []
+                opts.includeMetadata (1,1) logical = false
             end
             queryParams = struct();
             if ~isempty(opts.limit)
@@ -59,6 +61,12 @@ classdef Stations < handle
             end
             if ~isempty(opts.procedureIds)
                 queryParams.procedure_ids = opts.procedureIds;
+            end
+            if ~isempty(opts.metadata)
+                queryParams.metadata = jsonencode(opts.metadata);
+            end
+            if ~isempty(opts.includeMetadata)
+                queryParams.include_metadata = opts.includeMetadata;
             end
             response = obj.Client.get('/v2/stations', queryParams);
         end
