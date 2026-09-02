@@ -23,6 +23,7 @@ sdk = tofupilot.TofuPilot('your-api-key');
 req.outcome = 'PASS';
 req.procedure_id = '550e8400-e29b-41d4-a716-446655440000';
 req.deployment_id = 'example-value';
+req.client_run_ref = 'example-value';
 req.procedure_version = 'v1.2.3';
 req.operated_by = 'john.doe@example.com';
 req.started_at = '2026-01-15T10:30:00Z';
@@ -54,6 +55,7 @@ response = sdk.Runs.create(req);
 | `outcome` | `string` | :heavy_check_mark: | Overall test result. Use PASS when test succeeds, FAIL when test fails but script execution completed successfully, ERROR when script execution fails, TIMEOUT when test exceeds time limit, ABORTED for manual script interruption. | PASS |
 | `procedure_id` | `string` | :heavy_check_mark: | Procedure ID. Create the procedure in the app first, then find the auto-generated ID on the procedure page. | 550e8400-e29b-41d4-a716-446655440000 |
 | `deployment_id` | `string (optional)` | :heavy_minus_sign: | Deployment ID this run was executed from. Set by the CLI when running a pulled deployment so the run is linked back to the exact build it ran. Validated against the procedure; left null for ad-hoc or local runs. | example-value |
+| `client_run_ref` | `string (optional)` | :heavy_minus_sign: | Idempotency reference for this upload, minted and persisted by the caller BEFORE the request is sent. When a second request carries the same reference, it is recognised as a retry of the first and returns the run already created rather than creating another one. That is what makes an upload safe to retry after a lost or timed-out response. The reference must be unique per organization and must never be reused for different data: derive it from the credential id returned at login plus a counter persisted locally (the CLI sends `<credential id>_<counter>`), never from a timestamp alone, since a clock can go backwards. Omit the field and every request creates a new run, exactly as before. | example-value |
 | `procedure_version` | `string (optional)` | :heavy_minus_sign: | Specific version of the test procedure used for the run. Matched case-insensitively. If none exist, a procedure with this procedure version will be created. If no procedure version is specified, the run will not be linked to any specific version. | v1.2.3 |
 | `operated_by` | `string (optional)` | :heavy_minus_sign: | Operator who executed the test run: an email address or a free-text name. Honored only for API-key callers (user keys and station keys); browser session callers are auto-stamped with the session user and this field is ignored. An email matching a member of the calling organization links the run to that user account; any other value (a name, or an unrecognized email) is recorded verbatim as a declared operator name. Declared names are informative only — they are not verified identities. | john.doe@example.com |
 | `started_at` | `string` | :heavy_check_mark: | ISO 8601 timestamp when the test run began execution. This timestamp will be used to track when the test execution started and for historical analysis of test runs. A separate created_at timestamp is stored internally server side to track upload date. | 2026-01-15T10:30:00Z |
