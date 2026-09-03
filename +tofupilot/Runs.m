@@ -49,6 +49,8 @@ classdef Runs < handle
                 opts.procedureIds  = []
                 opts.procedureVersions  = []
                 opts.deploymentIds  = []
+                opts.executionIds  = []
+                opts.slotKeys  = []
                 opts.environments  = []
                 opts.serialNumbers  = []
                 opts.samples  = []
@@ -92,6 +94,12 @@ classdef Runs < handle
             end
             if ~isempty(opts.deploymentIds)
                 queryParams.deployment_ids = opts.deploymentIds;
+            end
+            if ~isempty(opts.executionIds)
+                queryParams.execution_ids = opts.executionIds;
+            end
+            if ~isempty(opts.slotKeys)
+                queryParams.slot_keys = opts.slotKeys;
             end
             if ~isempty(opts.environments)
                 queryParams.environments = opts.environments;

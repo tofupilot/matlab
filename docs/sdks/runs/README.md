@@ -24,6 +24,9 @@ req.outcome = 'PASS';
 req.procedure_id = '550e8400-e29b-41d4-a716-446655440000';
 req.deployment_id = 'example-value';
 req.client_run_ref = 'example-value';
+req.execution_id = 'example-value';
+req.slot_key = 'example-value';
+req.slot_name = 'example-value';
 req.procedure_version = 'v1.2.3';
 req.operated_by = 'john.doe@example.com';
 req.started_at = '2026-01-15T10:30:00Z';
@@ -56,6 +59,9 @@ response = sdk.Runs.create(req);
 | `procedure_id` | `string` | :heavy_check_mark: | Procedure ID. Create the procedure in the app first, then find the auto-generated ID on the procedure page. | 550e8400-e29b-41d4-a716-446655440000 |
 | `deployment_id` | `string (optional)` | :heavy_minus_sign: | Deployment ID this run was executed from. Set by the CLI when running a pulled deployment so the run is linked back to the exact build it ran. Validated against the procedure; left null for ad-hoc or local runs. | example-value |
 | `client_run_ref` | `string (optional)` | :heavy_minus_sign: | Idempotency reference for this upload, minted and persisted by the caller BEFORE the request is sent. When a second request carries the same reference, it is recognised as a retry of the first and returns the run already created rather than creating another one. That is what makes an upload safe to retry after a lost or timed-out response. The reference must be unique per organization and must never be reused for different data: derive it from the credential id returned at login plus a counter persisted locally (the CLI sends `<credential id>_<counter>`), never from a timestamp alone, since a clock can go backwards. Omit the field and every request creates a new run, exactly as before. | example-value |
+| `execution_id` | `string (optional)` | :heavy_minus_sign: | Groups the runs produced by one multi-slot execution, one run per slot. Minted by the client once per start and shared by every slot run of that start. Omit for single-slot runs. | example-value |
+| `slot_key` | `string (optional)` | :heavy_minus_sign: | Key of the fixture slot that produced this run, from the procedure execution.slots config. Requires execution_id. One run per slot per execution. | example-value |
+| `slot_name` | `string (optional)` | :heavy_minus_sign: | Display name of the slot as declared at run time. Requires slot_key. Stored as-is so later fixture renames do not rewrite old runs. | example-value |
 | `procedure_version` | `string (optional)` | :heavy_minus_sign: | Specific version of the test procedure used for the run. Matched case-insensitively. If none exist, a procedure with this procedure version will be created. If no procedure version is specified, the run will not be linked to any specific version. | v1.2.3 |
 | `operated_by` | `string (optional)` | :heavy_minus_sign: | Operator who executed the test run: an email address or a free-text name. Honored only for API-key callers (user keys and station keys); browser session callers are auto-stamped with the session user and this field is ignored. An email matching a member of the calling organization links the run to that user account; any other value (a name, or an unrecognized email) is recorded verbatim as a declared operator name. Declared names are informative only — they are not verified identities. | john.doe@example.com |
 | `started_at` | `string` | :heavy_check_mark: | ISO 8601 timestamp when the test run began execution. This timestamp will be used to track when the test execution started and for historical analysis of test runs. A separate created_at timestamp is stored internally server side to track upload date. | 2026-01-15T10:30:00Z |
@@ -79,6 +85,7 @@ response = sdk.Runs.create(req);
 | Error 401 | 401 | application/json |
 | Error 403 | 403 | application/json |
 | Error 404 | 404 | application/json |
+| Error 409 | 409 | application/json |
 | Error 422 | 422 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
@@ -105,6 +112,8 @@ response = sdk.Runs.list('searchQuery', 'search-term', 'ids', {'value-1', 'value
 | `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `procedureVersions` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `deploymentIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `executionIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `slotKeys` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `environments` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
 | `serialNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `samples` | `cell array of string` | :heavy_minus_sign: | N/A | {} |

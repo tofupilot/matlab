@@ -1,5 +1,5 @@
 % TOFUPILOT — TofuPilot API v2 client for MATLAB
-% Version 2.12.0
+% Version 2.13.0
 %
 % Classes:
 %   TofuPilot - Main SDK client. Entry point for all API operations.
