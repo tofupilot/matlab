@@ -114,6 +114,7 @@ response = sdk.Runs.list('searchQuery', 'search-term', 'ids', {'value-1', 'value
 | `deploymentIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `executionIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `slotKeys` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
+| `slotNames` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `environments` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
 | `serialNumbers` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `samples` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
