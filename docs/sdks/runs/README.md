@@ -147,6 +147,7 @@ response = sdk.Runs.list('searchQuery', 'search-term', 'ids', {'value-1', 'value
 | ---------- | ----------- | ------------ |
 | Error 400 | 400 | application/json |
 | Error 401 | 401 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
@@ -204,6 +205,7 @@ response = sdk.Runs.get('550e8400-e29b-41d4-a716-446655440000');
 | Error 400 | 400 | application/json |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |

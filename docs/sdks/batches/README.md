@@ -35,6 +35,7 @@ response = sdk.Batches.get('PCB-V2.0');
 | Error 400 | 400 | application/json |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
@@ -138,6 +139,7 @@ response = sdk.Batches.list('ids', {'value-1', 'value-2'}, 'numbers', {'value-1'
 | ---------- | ----------- | ------------ |
 | Error 400 | 400 | application/json |
 | Error 401 | 401 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |

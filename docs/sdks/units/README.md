@@ -105,6 +105,7 @@ response = sdk.Units.list('searchQuery', 'search-term', 'ids', {'value-1', 'valu
 | Error Type | Status Code | Content Type |
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
@@ -162,6 +163,7 @@ response = sdk.Units.get('SN-001234');
 | Error 400 | 400 | application/json |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |

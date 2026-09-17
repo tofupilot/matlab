@@ -81,6 +81,7 @@ response = sdk.Parts.list('limit', 20, 'cursor', 0, 'searchQuery', 'search-term'
 | Error Type | Status Code | Content Type |
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
@@ -109,6 +110,7 @@ response = sdk.Parts.get('PCB-V2.0');
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |

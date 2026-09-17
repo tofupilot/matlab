@@ -78,6 +78,7 @@ response = sdk.Stations.list('limit', 20, 'cursor', 0, 'searchQuery', 'search-te
 | Error Type | Status Code | Content Type |
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
@@ -104,6 +105,7 @@ No parameters required.
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 403 | 403 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
@@ -132,6 +134,7 @@ response = sdk.Stations.get('550e8400-e29b-41d4-a716-446655440000');
 | ---------- | ----------- | ------------ |
 | Error 401 | 401 | application/json |
 | Error 404 | 404 | application/json |
+| Error 408 | 408 | application/json |
 | Error 4XX | 4XX | application/json |
 | Error 500 | 500 | application/json |
 | Error 5XX | 5XX | application/json |
