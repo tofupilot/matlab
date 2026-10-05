@@ -25,8 +25,8 @@ response = sdk.Logs.list('procedureIds', {'value-1', 'value-2'}, 'searchQuery', 
 | `procedureIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `searchQuery` | `string (optional)` | :heavy_minus_sign: | N/A | search-term |
 | `levels` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
-| `timestampAfter` | `string (optional)` | :heavy_minus_sign: | Filter logs with timestamp after this date (inclusive). | 2026-01-15T10:30:00Z |
-| `timestampBefore` | `string (optional)` | :heavy_minus_sign: | Filter logs with timestamp before this date (inclusive). | 2026-01-15T10:30:00Z |
+| `timestampAfter` | `string (optional)` | :heavy_minus_sign: | Filter logs recorded at or after this timestamp. | 2026-01-15T10:30:00Z |
+| `timestampBefore` | `string (optional)` | :heavy_minus_sign: | Filter logs recorded at or before this timestamp. | 2026-01-15T10:30:00Z |
 | `sourceFiles` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `runIds` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `runOutcomes` | `cell array of string` | :heavy_minus_sign: | N/A | {} |
