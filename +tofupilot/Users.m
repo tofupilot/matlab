@@ -3,6 +3,7 @@ classdef Users < handle
     %
     %   Methods:
     %     list - List users
+    %     getCurrent - Get current user
     %
     %   See also tofupilot.TofuPilot
 
@@ -22,18 +23,16 @@ classdef Users < handle
             obj.Client = client;
         end
 
-        function response = list(obj, opts)
+        function response = list(obj)
             %LIST List users
-            %   List users in your organization. Set `current=true` to return only the authenticated user.
-            arguments
-                obj
-                opts.current  = []
-            end
-            queryParams = struct();
-            if ~isempty(opts.current)
-                queryParams.current = opts.current;
-            end
-            response = obj.Client.get('/v2/users', queryParams);
+            %   List users in your organization. For the user behind the key, use GET /v2/users/current.
+            response = obj.Client.get('/v2/users');
+        end
+
+        function response = getCurrent(obj)
+            %GETCURRENT Get current user
+            %   Get the user the request is authenticated as. The mirror of GET /v2/stations/current: a station key is refused.
+            response = obj.Client.get('/v2/users/current');
         end
     end
 end
