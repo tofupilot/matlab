@@ -120,7 +120,7 @@ function results = test_users(sdk)
     results = {};
 
     try
-        resp = sdk.User.list();
+        resp = sdk.Users.list();
         assert(isstruct(resp), 'Expected struct response');
         results{end+1} = pass('list');
     catch ex
@@ -128,11 +128,11 @@ function results = test_users(sdk)
     end
 
     try
-        resp = sdk.User.list('current', true);
+        resp = sdk.Users.getCurrent();
         assert(isstruct(resp), 'Expected struct response');
-        results{end+1} = pass('list_current');
+        results{end+1} = pass('get_current');
     catch ex
-        results{end+1} = fail('list_current', ex.message);
+        results{end+1} = fail('get_current', ex.message);
     end
 end
 
