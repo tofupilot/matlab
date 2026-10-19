@@ -31,6 +31,7 @@ classdef Phases < handle
                 opts.procedureId (1,1) string = ""
                 opts.names  = []
                 opts.outcomes  = []
+                opts.sequencePaths  = []
                 opts.startedAfter (1,1) string = ""
                 opts.startedBefore (1,1) string = ""
                 opts.excludeRetries (1,1) logical = true
@@ -64,6 +65,9 @@ classdef Phases < handle
             end
             if ~isempty(opts.outcomes)
                 queryParams.outcomes = opts.outcomes;
+            end
+            if ~isempty(opts.sequencePaths)
+                queryParams.sequence_paths = opts.sequencePaths;
             end
             if ~isempty(opts.startedAfter)
                 queryParams.started_after = opts.startedAfter;

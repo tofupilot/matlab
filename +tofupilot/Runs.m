@@ -76,6 +76,7 @@ classdef Runs < handle
                 opts.sortOrder (1,1) string = "desc"
                 opts.metadata  = []
                 opts.includeMetadata (1,1) logical = false
+                opts.includeSequences (1,1) logical = false
             end
             queryParams = struct();
             if ~isempty(opts.searchQuery)
@@ -176,6 +177,9 @@ classdef Runs < handle
             end
             if ~isempty(opts.includeMetadata)
                 queryParams.include_metadata = opts.includeMetadata;
+            end
+            if ~isempty(opts.includeSequences)
+                queryParams.include_sequences = opts.includeSequences;
             end
             response = obj.Client.get('/v2/runs', queryParams);
         end

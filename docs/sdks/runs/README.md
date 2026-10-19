@@ -38,6 +38,7 @@ req.batch_number = 'BATCH-2024-Q1';
 req.sub_units = {'value-1', 'value-2'};
 req.docstring = 'Test run description';
 req.phases = {};
+req.sequences = {};
 req.logs = {};
 req.metadata = struct();
 req.unit_metadata = struct();
@@ -73,6 +74,7 @@ response = sdk.Runs.create(req);
 | `sub_units` | `cell array of string` | :heavy_minus_sign: | Array of sub-unit serial numbers that are part of this main unit. Matched case-insensitively. Each sub-unit must already exist and will be linked as a sub-component of the main unit under test. If no sub-units are specified, the unit will be created without sub-unit relationships. | {'value-1', 'value-2'} |
 | `docstring` | `string (optional)` | :heavy_minus_sign: | Additional notes or documentation about this test run. | Test run description |
 | `phases` | `cell array of string` | :heavy_minus_sign: | Array of test phases with measurements and results. Each phase represents a distinct stage of the test execution with timing information, outcome status, and optional measurements. If no phases are specified, the run will be created without phase-level organization of test data. | {} |
+| `sequences` | `cell array of string` | :heavy_minus_sign: | Sequence calls of the run: the groups of phases the procedure composed with `uses:`, each with its own outcome. A phase joins its call through its `sequence_path` field, which must name one `path` of this array. A nested call (`calibration/dmm`) needs its parent path (`calibration`) in the same array, in any order. Omit for a procedure without sequences. | {} |
 | `logs` | `cell array of string` | :heavy_minus_sign: | Array of log messages generated during the test execution. Each log entry captures events, errors, and diagnostic information with severity levels and source code references. If no logs are specified, the run will be created without log entries. | {} |
 | `metadata` | `string` | :heavy_minus_sign: | Custom metadata to attach to the run (max 50 keys). Plain object of key/value pairs; values can be string, number, or boolean. Type is detected from the value. | struct() |
 | `unit_metadata` | `string` | :heavy_minus_sign: | Custom metadata to upsert on the unit under test (max 50 keys per unit). PATCH semantics: keys not present here are preserved on the unit. | struct() |
@@ -139,6 +141,7 @@ response = sdk.Runs.list('searchQuery', 'search-term', 'ids', {'value-1', 'value
 | `sortOrder` | `string` | :heavy_minus_sign: | Sort order direction. | desc |
 | `metadata` | `string` | :heavy_minus_sign: | Filter runs by custom metadata. Supports up to 5 keys per request. Per-key operators: string `{in: [...]}`/`{contains: "..."}`, number `{gte, lte, gt, lt, eq}`, bool `{eq: true\|false}`. | struct() |
 | `includeMetadata` | `logical (optional)` | :heavy_minus_sign: | When true, includes the run metadata array in the response. Defaults to false to keep payloads small. | false |
+| `includeSequences` | `logical (optional)` | :heavy_minus_sign: | When true, includes the top-level sequence calls of each run (the calls made in the procedure itself, not the calls nested in them). Defaults to false to keep payloads small. | false |
 
 
 ### Errors

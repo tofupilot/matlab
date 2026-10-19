@@ -25,6 +25,7 @@ response = sdk.Phases.list('procedureId', '550e8400-e29b-41d4-a716-446655440000'
 | `procedureId` | `string` | :heavy_check_mark: | Procedure to list phases for. Required: phases are scoped to a single procedure. | 550e8400-e29b-41d4-a716-446655440000 |
 | `names` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `outcomes` | `cell array of string` | :heavy_minus_sign: | N/A | {'PASS', 'FAIL'} |
+| `sequencePaths` | `cell array of string` | :heavy_minus_sign: | N/A | {'value-1', 'value-2'} |
 | `startedAfter` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
 | `startedBefore` | `string (optional)` | :heavy_minus_sign: | N/A | 2026-01-15T10:30:00Z |
 | `excludeRetries` | `logical (optional)` | :heavy_minus_sign: | N/A | true |
