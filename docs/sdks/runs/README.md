@@ -23,6 +23,7 @@ sdk = tofupilot.TofuPilot('your-api-key');
 req.outcome = 'PASS';
 req.procedure_id = '550e8400-e29b-41d4-a716-446655440000';
 req.deployment_id = 'example-value';
+req.deployment_digest = 'example-value';
 req.client_run_ref = 'example-value';
 req.execution_id = 'example-value';
 req.slot_key = 'example-value';
@@ -61,6 +62,7 @@ response = sdk.Runs.create(req);
 | `outcome` | `string` | :heavy_check_mark: | Overall test result. Use PASS when test succeeds, FAIL when test fails but script execution completed successfully, ERROR when script execution fails, TIMEOUT when test exceeds time limit, ABORTED for manual script interruption. | PASS |
 | `procedure_id` | `string` | :heavy_check_mark: | Procedure ID. Create the procedure in the app first, then find the auto-generated ID on the procedure page. | 550e8400-e29b-41d4-a716-446655440000 |
 | `deployment_id` | `string (optional)` | :heavy_minus_sign: | Deployment ID this run was executed from. Set by the CLI when running a pulled deployment so the run is linked back to the exact build it ran. Validated against the procedure; left null for ad-hoc or local runs. | example-value |
+| `deployment_digest` | `string (optional)` | :heavy_minus_sign: | SHA-256 digest of the deployed sources the station checked before this run. Set by the CLI with `deployment_id` when it ran a pulled deployment whose files it verified against their install. The server compares it with the digest of that deployment's build and records whether they match. Read only from a station key; ignored otherwise. Omit it for ad-hoc or local runs. | example-value |
 | `client_run_ref` | `string (optional)` | :heavy_minus_sign: | Idempotency reference for this upload, minted and persisted by the caller BEFORE the request is sent. When a second request carries the same reference, it is recognised as a retry of the first and returns the run already created rather than creating another one. That is what makes an upload safe to retry after a lost or timed-out response. The reference must be unique per organization and must never be reused for different data: derive it from the credential id returned at login plus a counter persisted locally (the CLI sends `<credential id>_<counter>`), never from a timestamp alone, since a clock can go backwards. Omit the field and every request creates a new run, exactly as before. | example-value |
 | `execution_id` | `string (optional)` | :heavy_minus_sign: | Groups the runs produced by one multi-slot execution, one run per slot. Minted by the client once per start and shared by every slot run of that start. Omit for single-slot runs. | example-value |
 | `slot_key` | `string (optional)` | :heavy_minus_sign: | Key of the fixture slot that produced this run, from the procedure execution.slots config. Requires execution_id. One run per slot per execution. | example-value |
