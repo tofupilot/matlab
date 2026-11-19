@@ -20,6 +20,7 @@ TofuPilot API v2 client for MATLAB
 * [Measurements](measurements/README.md)
 * [Deployments](deployments/README.md)
 * [Identity](identity/README.md)
+* [AuditLog](audit_log/README.md)
 
 ## Usage
 

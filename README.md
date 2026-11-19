@@ -56,6 +56,7 @@ fprintf('Created run: %s\n', run.id);
 | **Measurements** | list, get | [docs/sdks/measurements](https://github.com/tofupilot/matlab/blob/main/docs/sdks/measurements/README.md) |
 | **Deployments** | list, get | [docs/sdks/deployments](https://github.com/tofupilot/matlab/blob/main/docs/sdks/deployments/README.md) |
 | **Identity** | whoami | [docs/sdks/identity](https://github.com/tofupilot/matlab/blob/main/docs/sdks/identity/README.md) |
+| **AuditLog** | list | [docs/sdks/audit_log](https://github.com/tofupilot/matlab/blob/main/docs/sdks/audit_log/README.md) |
 | **Versions** | get, delete, create | [docs/sdks/versions](https://github.com/tofupilot/matlab/blob/main/docs/sdks/versions/README.md) |
 | **Revisions** | get, update, delete, create | [docs/sdks/revisions](https://github.com/tofupilot/matlab/blob/main/docs/sdks/revisions/README.md) |
 | **AttachmentHelpers** | upload, download | [docs/sdks/attachments](https://github.com/tofupilot/matlab/blob/main/docs/sdks/attachments/README.md) |

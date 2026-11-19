@@ -21,6 +21,7 @@ classdef TofuPilot < handle
     %     sdk.Measurements
     %     sdk.Deployments
     %     sdk.Identity
+    %     sdk.AuditLog
     %
     %   Hooks:
     %     sdk = tofupilot.TofuPilot('key', 'BeforeRequest', {@(ctx) disp(ctx.path)})
@@ -48,6 +49,7 @@ classdef TofuPilot < handle
         Measurements  % tofupilot.Measurements
         Deployments  % tofupilot.Deployments
         Identity  % tofupilot.Identity
+        AuditLog  % tofupilot.AuditLog
     end
 
     properties (Access = private)
@@ -99,6 +101,7 @@ classdef TofuPilot < handle
             obj.Measurements = tofupilot.Measurements(obj.Client);
             obj.Deployments = tofupilot.Deployments(obj.Client);
             obj.Identity = tofupilot.Identity(obj.Client);
+            obj.AuditLog = tofupilot.AuditLog(obj.Client);
             obj.Procedures.Versions = tofupilot.Versions(obj.Client);
             obj.Parts.Revisions = tofupilot.Revisions(obj.Client);
         end
